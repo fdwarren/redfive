@@ -1,0 +1,70 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Red Five Table Definition",
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string",
+        "description": "The default database schema to use for the table"
+      },
+      "description": {
+        "type": "string",
+        "description": "High-level description of the entity or table"
+      },
+      "keys": {
+        "type": "object",
+        "description": "Defines table keys and relationships",
+        "properties": {
+          "primary": {
+            "type": "string"
+          },
+          "unique": {
+            "type": "string"
+          },
+          "foreign": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "columns": {
+                  "type": "string"
+                },
+                "ref_schema": { "type": "string" },
+                "ref_table": { "type": "string" },
+                "ref_columns": {
+                  "type": "string"
+                }
+              },
+              "required": ["columns", "ref_table", "ref_columns"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["primary"],
+        "additionalProperties": false
+      },
+      "columns": {
+        "type": "array",
+        "description": "Column definitions for the table",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "type": {
+              "type": "string",
+              "pattern": "^(guid|string \\d+|string|float|integer|date|timestamp)$",
+              "description": "Accepts guid, float, integer, date, timestamp, or string(n)"
+            },
+            "description": { "type": "string" },
+            "nullable": { "type": "boolean" }
+          },
+          "required": ["name", "type"],
+          "additionalProperties": false
+        },
+        "minItems": 1
+      }
+    },
+    "required": ["description", "keys", "columns"],
+    "additionalProperties": false
+  }
+  

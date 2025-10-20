@@ -1,0 +1,54 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Red Five Project Definition",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "The name of the project"
+      },
+      "actions": {
+        "type": "array",
+        "description": "List of actions to perform",
+        "items": {
+          "type": "object",
+          "properties": {
+            "schema": {
+              "type": "string",
+              "description": "The database schema relevant to the action"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["yaml-to-ddl", "ddl-to-yaml"],
+              "description": "Specifies the action type"
+            },
+            "target": {
+              "type": "string",
+              "enum": ["postgres", "snowflake"],
+              "description": "Target system for yaml-to-ddl actions"
+            },
+            "source": {
+              "type": "string",
+              "enum": ["postgres", "snowflake"],
+              "description": "Source system for ddl-to-yaml actions"
+            }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "type": { "const": "yaml-to-ddl" } } },
+              "then": { "required": ["type", "target"] }
+            },
+            {
+              "if": { "properties": { "type": { "const": "ddl-to-yaml" } } },
+              "then": { "required": ["type", "source"] }
+            }
+          ],
+          "additionalProperties": false
+        },
+        "minItems": 1
+      }
+    },
+    "required": ["actions"],
+    "additionalProperties": false
+  }
+  

@@ -1,0 +1,37 @@
+-- {{ description }}
+CREATE TABLE {{ schema | default('public') }}.{{ name }} (
+{%- for col in columns %}
+    {{ col.name }} {{ 
+        "UUID" if col.type == "guid" else
+        "VARCHAR(" ~ col.type.split(" ")[1] ~ ")" if col.type.startswith("string ") else
+        "VARCHAR" if col.type == "string" else
+        "FLOAT" if col.type == "float" else
+        "INTEGER" if col.type == "integer" else
+        "DATE" if col.type == "date" else
+        "TIMESTAMP" if col.type == "timestamp" else
+        col.type | upper
+    }}{% if not col.nullable %} NOT NULL{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+);
+
+-- Primary Key
+ALTER TABLE {{ schema | default('public') }}.{{ name }}
+    ADD PRIMARY KEY ({{ keys.primary }});
+
+{%- if keys.unique %}
+-- Unique Constraint
+ALTER TABLE {{ schema | default('public') }}.{{ name }}
+    ADD CONSTRAINT {{ name }}_unique UNIQUE ({{ keys.unique }});
+{%- endif %}
+
+--FOREIGN KEYS
+
+{%- if keys.foreign %}
+-- Foreign Keys
+{%- for fk in keys.foreign %}
+ALTER TABLE {{ schema | default('public') }}.{{ name }}
+    ADD CONSTRAINT {{ name }}_fk_{{ loop.index }}
+    FOREIGN KEY ({{ fk.columns }})
+    REFERENCES {{ fk.ref_schema | default(schema | default('public')) }}.{{ fk.ref_table }} ({{ fk.ref_columns }});
+{%- endfor %}
+{%- endif %}

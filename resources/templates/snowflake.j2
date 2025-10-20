@@ -1,0 +1,37 @@
+-- {{ description }}
+CREATE OR REPLACE TABLE {{ schema | default('PUBLIC') }}.{{ name }} (
+{%- for col in columns %}
+    {{ col.name | upper }} {{ 
+        "STRING" if col.type == "guid" else
+        "STRING(" ~ col.type.split(" ")[1] ~ ")" if col.type.startswith("string ") else
+        "STRING" if col.type == "string" else
+        "FLOAT" if col.type == "float" else
+        "NUMBER" if col.type == "integer" else
+        "DATE" if col.type == "date" else
+        "TIMESTAMP_NTZ" if col.type == "timestamp" else
+        col.type | upper
+    }}{% if not col.nullable %} NOT NULL{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+);
+
+-- Primary Key
+ALTER TABLE {{ schema | default('PUBLIC') }}.{{ name }}
+    ADD CONSTRAINT {{ name }}_PK PRIMARY KEY ({{ keys.primary }});
+
+{%- if keys.unique %}
+-- Unique Constraint
+ALTER TABLE {{ schema | default('PUBLIC') }}.{{ name }}
+    ADD CONSTRAINT {{ name }}_UNQ UNIQUE ({{ keys.unique }});
+{%- endif %}
+
+--FOREIGN KEYS
+
+{%- if keys.foreign %}
+-- Foreign Keys
+{%- for fk in keys.foreign %}
+ALTER TABLE {{ schema | default('PUBLIC') }}.{{ name }}
+    ADD CONSTRAINT {{ name }}_FK_{{ loop.index }}
+    FOREIGN KEY ({{ fk.columns }})
+    REFERENCES {{ fk.ref_schema | default(schema | default('PUBLIC')) }}.{{ fk.ref_table }} ({{ fk.ref_columns }});
+{%- endfor %}
+{%- endif %}

@@ -1,0 +1,11 @@
+.env
+.venv/
+io/
+build/
+dist/
+wheels/
+*.egg-info
+.DS_Store
+__pycache__/
+*.py[oc]
+
