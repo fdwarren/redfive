@@ -3,6 +3,14 @@
     "title": "Red Five Table Definition",
     "type": "object",
     "properties": {
+      "name": {
+        "type": "string",
+        "description": "The database name for the entity or table"
+      },
+      "label": {
+        "type": "string",
+        "description": "The user-friendly label for the entity or table"
+      },
       "schema": {
         "type": "string",
         "description": "The default database schema to use for the table"
@@ -50,10 +58,11 @@
           "type": "object",
           "properties": {
             "name": { "type": "string" },
+            "label": { "type": "string" },
             "type": {
               "type": "string",
               "pattern": "^(guid|string \\d+|string|float|integer|date|timestamp)$",
-              "description": "Accepts guid, float, integer, date, timestamp, or string(n)"
+              "description": "Accepts guid, float, integer, date, timestamp, or string n"
             },
             "description": { "type": "string" },
             "nullable": { "type": "boolean" }

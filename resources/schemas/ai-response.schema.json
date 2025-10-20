@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "AI Response Schema",
+    "type": "object",
+    "properties": {
+      "response_type": {
+        "type": "string",
+        "enum": ["sql", "message"],
+        "description": "Type of response"
+      },
+      "text": {
+        "type": "string",
+        "description": "Response text"
+      }
+    },
+    "required": ["response_type", "text"],
+    "additionalProperties": false
+  }
+  

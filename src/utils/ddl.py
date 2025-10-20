@@ -72,8 +72,8 @@ def generate_ddl(project_dir: str, output_dir: str):
                 print(f"Reverse-engineering YAML from {action['source']}")
 
 def do_ddl():
-    project_dir = Path(os.path.expanduser("~/Projects/redfive/io/upstream"))
-    output_dir = Path(os.path.expanduser("~/Projects/redfive/io/ddl-out"))
+    project_dir = Path(os.path.expanduser("./io/upstream"))
+    output_dir = Path(os.path.expanduser("./io/ddl-out"))
 
     generate_ddl(
         project_dir=project_dir,
