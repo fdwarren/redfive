@@ -26,9 +26,6 @@
           "primary": {
             "type": "string"
           },
-          "unique": {
-            "type": "string"
-          },
           "foreign": {
             "type": "array",
             "items": {

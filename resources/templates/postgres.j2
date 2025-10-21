@@ -18,12 +18,6 @@ CREATE TABLE {{ schema | default('public') }}.{{ name }} (
 ALTER TABLE {{ schema | default('public') }}.{{ name }}
     ADD PRIMARY KEY ({{ keys.primary }});
 
-{%- if keys.unique %}
--- Unique Constraint
-ALTER TABLE {{ schema | default('public') }}.{{ name }}
-    ADD CONSTRAINT {{ name }}_unique UNIQUE ({{ keys.unique }});
-{%- endif %}
-
 --FOREIGN KEYS
 
 {%- if keys.foreign %}

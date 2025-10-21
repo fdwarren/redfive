@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, Table, MetaData, text
 from sqlalchemy.orm import sessionmaker
 from openai import OpenAI
 
-def create_embeddings(db_connection_string: str, models_dir: str):
+def create_embeddings(db_connection_string: str, models: dict):
     client = OpenAI()
     engine = create_engine(db_connection_string)
     metadata = MetaData()
@@ -13,33 +13,39 @@ def create_embeddings(db_connection_string: str, models_dir: str):
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    # Delete existing embeddings before inserting new ones
+    print("Deleting existing embeddings...")
+    session.execute(semantic_embeddings.delete())
+    print("Existing embeddings marked for deletion")
+
     def flatten_schema(model, table_name):
         yield f"Table {table_name}: {model.get('description','')}"
         for col in model.get("columns", []):
             yield f"Column {col['name']} ({col['type']}) in {table_name}: {col.get('description','')}"
 
-    # for fname in os.listdir(models_dir):
-    #     if not fname.endswith(".yaml"):
-    #         continue
-    #     with open(os.path.join(models_dir, fname)) as f:
-    #         model = yaml.safe_load(f)
-    #     table_name = os.path.splitext(fname)[0]
-    #     for text in flatten_schema(model, table_name):
-    #         emb = client.embeddings.create(
-    #             model="text-embedding-3-small", input=text
-    #         ).data[0].embedding
-    #         session.execute(
-    #             semantic_embeddings.insert().values(
-    #                 entity_type="column" if text.startswith("Column") else "table",
-    #                 entity_name=table_name if text.startswith("Table") else text.split()[1],
-    #                 parent_table=None if text.startswith("Table") else table_name,
-    #                 content=text,
-    #                 embedding=emb
-    #             )
-    #         )
+    print("Creating new embeddings...")
+    embedding_count = 0
+    
+    for model in models.values():
+        table_path = model["path"]
+        for text in flatten_schema(model, table_path):
+            emb = client.embeddings.create(
+                model="text-embedding-3-small", input=text
+            ).data[0].embedding
+            session.execute(
+                semantic_embeddings.insert().values(
+                    entity_type="column" if text.startswith("Column") else "table",
+                    entity_name=table_path if text.startswith("Table") else text.split()[1],
+                    parent_table=None if text.startswith("Table") else table_path,
+                    content=text,
+                    embedding=emb
+                )
+            )
+            embedding_count += 1
 
     session.commit()
     session.close()
+    print(f"Successfully created {embedding_count} new embeddings")
 
 
 def retrieve_embeddings(db_connection_string: str, query: str, limit: int = 5):
@@ -68,10 +74,10 @@ def retrieve_embeddings(db_connection_string: str, query: str, limit: int = 5):
 def build_graph(models):
     G = nx.DiGraph()
     for model in models:
-        table = model.get("name")
+        table = model.get("path")
         fks = (model.get("keys") or {}).get("foreign", [])
         for fk in fks:
-            target = fk["ref_table"]
+            target = fk["ref_table_path"]
             G.add_edge(table, target)
     return G
 
@@ -87,16 +93,18 @@ def expand_with_graph(graph, requested_tables, max_depth=5):
 def build_llm_context(models, tables):
     lines = []
     for t in tables:
+        print("Building context for table: ", t)
         m = models[t]
         cols = ", ".join(c["name"] for c in m.get("columns", []))
         lines.append(f"Table {t} ({m.get('description','')}): {cols}")
         fks = m.get("keys", {}).get("foreign", [])
         for fk in fks:
-            ref = fk["ref_table"]
+            ref = fk["ref_table_path"]
             if ref in tables:
                 src = fk["columns"]
                 tgt = fk["ref_columns"]
                 lines.append(f"  FK: {t}.{src} -> {ref}.{tgt}")
+                
     return "\n".join(lines)
 
 def generate_sql(context: str, user_query: str):
@@ -112,10 +120,9 @@ def generate_sql(context: str, user_query: str):
         - Use only tables and columns from the schema.
         - Do not invent column names.
         - Do not invent table names.
-        - Verify the tables exist in the schema.
-        - Verify the column names exist in the schema.
         - The user request should be mapped to specific tables and columns in the schema.
         - Use explicit JOIN conditions where foreign keys exist.
+        - Use postgres compatible syntax.
         - Return only the SQL query, no other text.
         """
 

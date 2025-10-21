@@ -32,7 +32,6 @@ def extract_models_to_folder(db_connection_string: str, schema_name: str, output
     for table in insp.get_table_names(schema=schema_name):
         cols = insp.get_columns(table, schema=schema_name)
         pk = insp.get_pk_constraint(table, schema=schema_name)
-        uniques = insp.get_unique_constraints(table, schema=schema_name)
         fks = insp.get_foreign_keys(table, schema=schema_name)
         
         # Debug: Print foreign key info
@@ -55,10 +54,6 @@ def extract_models_to_folder(db_connection_string: str, schema_name: str, output
         keys = {
             "primary": ",".join(pk.get("constrained_columns", [])),
         }
-        
-        unique_constraints = [",".join(u.get("column_names", [])) for u in uniques if u.get("column_names")]
-        if unique_constraints:
-            keys["unique"] = ",".join(unique_constraints)
         
         if foreign_keys:
             keys["foreign"] = foreign_keys
