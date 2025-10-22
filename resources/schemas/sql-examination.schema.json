@@ -1,0 +1,77 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "SQL Stats Response",
+    "type": "object",
+    "properties": {
+      "explanation": {
+        "type": "object",
+        "description": "Details about the tables, columns, and relationships used in the generated SQL query.",
+        "properties": {
+          "tables": {
+            "type": "array",
+            "description": "List of tables referenced in the generated SQL query.",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "columns": {
+            "type": "array",
+            "description": "Column definitions returned by the query",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "label": { "type": "string" },
+                "table_name": { "type": "string" },
+                "type": {
+                  "type": "string",
+                  "pattern": "^(guid|string \\d+|string|float|integer|date|timestamp)$",
+                  "description": "Accepts guid, float, integer, date, timestamp, or string n"
+                },
+                "nullable": { "type": "boolean" }
+              },
+              "required": ["name", "table_name", "type"]
+            }
+          },
+            "relationships": {
+            "type": "array",
+            "description": "Join relationships between tables used in the query.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "from_table": {
+                  "type": "string",
+                  "description": "The source table in the join relationship.",
+                  "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+                },
+                "to_table": {
+                  "type": "string",
+                  "description": "The target table in the join relationship.",
+                  "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+                },
+                "join_type": {
+                  "type": "string",
+                  "description": "Type of SQL join used.",
+                  "enum": ["inner", "left", "right", "full", "cross"]
+                },
+                "condition": {
+                  "type": "string",
+                  "description": "The SQL join condition used to link the tables."
+                }
+              },
+              "required": ["from_table", "to_table", "join_type", "condition"],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          }
+        },
+        "required": ["tables", "columns"],
+        "additionalProperties": false
+      }
+    },
+    "required": ["response_type", "sql", "columns"]
+  }
+    

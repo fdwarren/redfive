@@ -44,6 +44,14 @@ class DataResponse(BaseModel):
     columns: list
     row_count: int
 
+class SqlExaminationRequest(BaseModel):
+    sql: str
+
+class SqlExaminationResponse(BaseModel):
+    response_type: str
+    sql: str
+    explanation: dict
+
 # Handle OPTIONS requests for CORS preflight
 @app.options("/generate-sql")
 async def options_generate_sql():
@@ -75,14 +83,21 @@ async def options_get_models():
     """Handle CORS preflight requests for the get-models endpoint."""
     return {"message": "OK"}
 
+@app.options("/examine-sql")
+async def options_examine_sql():
+    """Handle CORS preflight requests for the examine-sql endpoint."""
+    return {"message": "OK"}
+
 # FastAPI endpoints
 @app.post("/generate-sql", response_model=SqlResponse)
 async def generate_sql_endpoint(request: SqlRequest):
     """Generate SQL from a natural language query."""
     try:
-        sql = core.generate_sql(request.query)
-        return SqlResponse(sql=sql)
+        response = core.generate_sql(request.query)
+        print("Response: ", type(response))
+        return SqlResponse(sql=response["sql"])
     except Exception as e:
+        print("Error generating SQL: ", e)
         raise HTTPException(status_code=500, detail=f"Error generating SQL: {str(e)}")
 
 @app.post("/execute-sql", response_model=DataResponse)
@@ -157,6 +172,19 @@ async def get_models_endpoint():
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading models: {str(e)}")
+
+@app.post("/examine-sql", response_model=SqlExaminationResponse)
+async def examine_sql_endpoint(request: SqlExaminationRequest):
+    """Examine a SQL query and return statistics about tables, columns, and relationships."""
+    try:
+        result = core.examine_sql(request.sql)
+        return SqlExaminationResponse(
+            response_type=result.get("response_type", "sql_examination"),
+            sql=result.get("sql", request.sql),
+            explanation=result.get("explanation", {})
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error examining SQL: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

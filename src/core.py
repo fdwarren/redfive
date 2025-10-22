@@ -3,7 +3,9 @@ Core business logic for RedFive SQL Generator.
 This module contains all the reusable functionality that can be used by both API and MCP server.
 """
 
+import json
 import os
+import traceback
 import yaml
 from pathlib import Path
 from datetime import datetime
@@ -153,7 +155,7 @@ class RedFiveCore:
         
         return validation_results
 
-    def generate_sql(self, user_query: str) -> str:
+    def generate_sql(self, user_query: str) -> Dict[str, Any]:
         """
         Generate SQL from a natural language query.
         
@@ -172,8 +174,15 @@ class RedFiveCore:
         graph = build_graph(list(models.values()))
         table_names = expand_with_graph(graph, results)
         context = build_llm_context(models, table_names)
-        print("Context: ", context)
-        return generate_sql(context, user_query)
+
+        with open("./resources/schemas/sql-generation.schema.json", "r") as f:
+            sql_generation_schema = f.read()
+
+        response = generate_sql(context, sql_generation_schema, user_query)
+
+        print("Response: ", response)
+        return json.loads(response)
+
 
     def execute_sql_query(self, sql: str) -> Dict[str, Any]:
         """
@@ -269,4 +278,210 @@ class RedFiveCore:
             "models": models_array,
             "count": len(models_array),
             "timestamp": datetime.now().isoformat()
+        }
+
+    def examine_sql(self, sql: str) -> Dict[str, Any]:
+        """
+        Examine a SQL query and return statistics about tables, columns, and relationships.
+        
+        Args:
+            sql: SQL query to examine
+            
+        Returns:
+            Dictionary containing SQL examination results
+        """
+        models = self.load_models()
+        
+        # Use LLM to analyze the SQL query
+        context = self._build_sql_analysis_context(models, sql)
+        print("Building context for SQL analysis...")
+        analysis = self._analyze_sql_with_llm(context, sql)
+        print("SQL analysis completed.")
+        return analysis
+
+    def _build_sql_analysis_context(self, models: Dict[str, Any], sql: str) -> str:
+        """Build context for SQL analysis by finding relevant models."""
+        # Extract table names from SQL (simple regex approach)
+        import re
+        table_pattern = r'FROM\s+([a-zA-Z_][a-zA-Z0-9_.]*)|\bJOIN\s+([a-zA-Z_][a-zA-Z0-9_.]*)'
+        matches = re.findall(table_pattern, sql, re.IGNORECASE)
+        
+        # Flatten matches and clean up
+        table_names = []
+        for match in matches:
+            for name in match:
+                if name:
+                    # Remove schema prefix if present
+                    clean_name = name.split('.')[-1]
+                    table_names.append(clean_name)
+        
+        # Find matching models
+        relevant_models = []
+        for model_name, model in models.items():
+            table_name = model.get('name', '')
+            if table_name in table_names or any(table_name in tn for tn in table_names):
+                relevant_models.append(model)
+        
+        # Build context string
+        context_lines = []
+        for model in relevant_models:
+            table_path = model["path"]
+            cols = ", ".join(c["name"] for c in model.get("columns", []))
+            context_lines.append(f"Table {table_path} ({model.get('description','')}): {cols}")
+            
+            # Add foreign key relationships
+            fks = model.get("keys", {}).get("foreign", [])
+            for fk in fks:
+                ref = fk["ref_table_path"]
+                src = fk["columns"]
+                tgt = fk["ref_columns"]
+                context_lines.append(f"  FK: {table_path}.{src} -> {ref}.{tgt}")
+        
+        return "\n".join(context_lines)
+
+    def _analyze_sql_with_llm(self, context: str, sql: str) -> Dict[str, Any]:
+        """Use LLM to analyze SQL and extract statistics."""
+        from openai import OpenAI
+        import json
+        import re
+        
+        try:
+            # Simplified prompt without schema file dependency
+            prompt = f"""
+            Analyze the following SQL query and provide detailed statistics about its structure.
+
+            Available schema context:
+            {context}
+
+            SQL Query to analyze:
+            {sql}
+
+            Please provide a JSON response with this exact structure:
+            {{
+                "response_type": "sql_examination",
+                "sql": "{sql}",
+                "explanation": {{
+                    "tables": ["list", "of", "table", "names"],
+                    "columns": [
+                        {{
+                            "name": "column_name",
+                            "label": "display_label",
+                            "table_name": "source_table",
+                            "type": "string|integer|float|date|timestamp|guid",
+                            "nullable": true
+                        }}
+                    ],
+                    "relationships": [
+                        {{
+                            "from_table": "source_table",
+                            "to_table": "target_table",
+                            "join_type": "inner|left|right|full|cross",
+                            "condition": "join condition"
+                        }}
+                    ]
+                }}
+            }}
+
+            Rules:
+            - Extract all table names referenced in the query
+            - Identify all columns that will be returned
+            - Determine join relationships between tables
+            - Use only the table and column names from the provided schema context
+            - Return ONLY valid JSON, no other text, no markdown formatting
+            """
+
+            client = OpenAI()
+            
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0
+            )
+            
+            raw_response = response.choices[0].message.content.strip()
+            print(f"Raw LLM response: {raw_response[:200]}...")
+            
+            # Clean up the response - remove markdown code blocks if present
+            if raw_response.startswith("```json"):
+                raw_response = raw_response[7:]  # Remove ```json
+            elif raw_response.startswith("```"):
+                raw_response = raw_response[3:]   # Remove ```
+            if raw_response.endswith("```"):
+                raw_response = raw_response[:-3]  # Remove trailing ```
+            
+            raw_response = raw_response.strip()
+            print(f"Cleaned response: {raw_response[:200]}...")
+            
+            # Try to find JSON in the response
+            json_match = re.search(r'\{.*\}', raw_response, re.DOTALL)
+            if json_match:
+                json_str = json_match.group(0)
+                print(f"Extracted JSON: {json_str[:200]}...")
+                analysis = json.loads(json_str)
+            else:
+                # Try parsing the whole response
+                analysis = json.loads(raw_response)
+            
+            print("Successfully parsed LLM response")
+            return analysis
+            
+        except json.JSONDecodeError as e:
+            print(f"JSON decode error: {e}")
+            print(f"Raw response was: {raw_response}")
+            
+            # Try to extract basic information manually
+            return self._extract_basic_sql_info(sql, context)
+            
+        except Exception as e:
+            print("Error in _analyze_sql_with_llm: ", e)
+            traceback.print_exc()
+            
+            # Try to extract basic information manually
+            return self._extract_basic_sql_info(sql, context)
+
+    def _extract_basic_sql_info(self, sql: str, context: str) -> Dict[str, Any]:
+        """Extract basic SQL information without LLM."""
+        import re
+        
+        # Extract table names from SQL
+        table_pattern = r'FROM\s+([a-zA-Z_][a-zA-Z0-9_.]*)|\bJOIN\s+([a-zA-Z_][a-zA-Z0-9_.]*)'
+        matches = re.findall(table_pattern, sql, re.IGNORECASE)
+        
+        tables = []
+        for match in matches:
+            for name in match:
+                if name:
+                    clean_name = name.split('.')[-1]
+                    if clean_name not in tables:
+                        tables.append(clean_name)
+        
+        # Extract column names from SELECT
+        select_pattern = r'SELECT\s+(.*?)\s+FROM'
+        select_match = re.search(select_pattern, sql, re.IGNORECASE | re.DOTALL)
+        columns = []
+        
+        if select_match:
+            select_clause = select_match.group(1)
+            if '*' not in select_clause:
+                # Extract individual columns
+                col_pattern = r'([a-zA-Z_][a-zA-Z0-9_]*)'
+                col_matches = re.findall(col_pattern, select_clause)
+                for col in col_matches:
+                    if col.upper() not in ['SELECT', 'DISTINCT', 'TOP']:
+                        columns.append({
+                            "name": col,
+                            "label": col,
+                            "table_name": tables[0] if tables else "unknown",
+                            "type": "string",
+                            "nullable": True
+                        })
+        
+        return {
+            "response_type": "sql_examination",
+            "sql": sql,
+            "explanation": {
+                "tables": tables,
+                "columns": columns,
+                "relationships": []
+            }
         }

@@ -107,11 +107,23 @@ def build_llm_context(models, tables):
                 
     return "\n".join(lines)
 
-def generate_sql(context: str, user_query: str):
+def generate_sql(context: str, sql_generation_schema: str, user_query: str):
     prompt = f"""
-        You are a SQL generator. Use only the data structures and relationships in the schema below.
+        You are an expert SQL generation assistant. You will receive:
+        1. A user request in natural language.
+        2. Context retrieved from a semantic model (tables, columns, relationships).
+
+        Your task:
+        - Generate a **valid SQL query** for the request.
+        - Provide a **structured summary** of which columns were used in the query.
+
+        Use **only** the data structures and relationships in the provided schema:
 
         {context}
+
+        Respond **only** in JSON with this schema:
+
+        {sql_generation_schema}
 
         Generate a single SQL query answering:
         '{user_query}'
@@ -121,6 +133,7 @@ def generate_sql(context: str, user_query: str):
         - Do not invent column names.
         - Do not invent table names.
         - The user request should be mapped to specific tables and columns in the schema.
+        - Use case insensitive matching for user provided query parameters.
         - Use explicit JOIN conditions where foreign keys exist.
         - Use postgres compatible syntax.
         - Return only the SQL query, no other text.
@@ -137,13 +150,13 @@ def generate_sql(context: str, user_query: str):
     raw = resp.choices[0].message.content
     
     # Remove markdown code block formatting if present
-    if raw.startswith("```sql"):
-        raw = raw[6:]  # Remove ```sql
+    if raw.startswith("```json"):
+        raw = raw[7:]  # Remove ```sql
     if raw.startswith("```"):
         raw = raw[3:]   # Remove ```
     if raw.endswith("```"):
         raw = raw[:-3]  # Remove trailing ```
-    
     # Strip any leading/trailing whitespace
     raw = raw.strip()
+    
     return sqlparse.format(raw, reindent=True, keyword_case="upper")
