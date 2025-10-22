@@ -8,6 +8,7 @@ dependencies = [
     "fastapi>=0.104.1",
     "jinja2>=3.1.6",
     "jsonschema>=4.25.1",
+    "mcp>=1.0.0",
     "networkx>=3.5",
     "openai>=2.5.0",
     "psycopg2-binary>=2.9.11",
