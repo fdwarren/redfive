@@ -136,6 +136,7 @@ def generate_sql(context: str, sql_generation_schema: str, user_query: str):
         - Use case insensitive matching for user provided query parameters.
         - Use explicit JOIN conditions where foreign keys exist.
         - Use postgres compatible syntax.
+        - Only use the columns and tables provided in the schema.
         - Return only the SQL query, no other text.
         """
 

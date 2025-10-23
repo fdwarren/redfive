@@ -1,0 +1,16 @@
+name: og_downtime_type
+label: Downtime Type
+description: The type of downtime (e.g. planned, unplanned)
+keys:
+  primary: downtime_type_guid
+columns:
+- name: downtime_type_guid
+  label: Downtime Type Guid
+  type: guid
+  description: The GUID of the downtime type
+  nullable: false
+- name: downtime_type_name
+  label: Downtime Type Name
+  type: string 50
+  description: The name of the downtime type
+  nullable: false

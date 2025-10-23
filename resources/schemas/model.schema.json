@@ -61,8 +61,18 @@
               "pattern": "^(guid|string \\d+|string|float|integer|date|timestamp)$",
               "description": "Accepts guid, float, integer, date, timestamp, or string n"
             },
+            "spatial_type": {
+              "type": "string",
+              "pattern": "^(point|line|polygon)$",
+              "description": "Accepts point, line, or polygon"
+            },
             "description": { "type": "string" },
-            "nullable": { "type": "boolean" }
+            "nullable": { "type": "boolean" },
+            "semantic_role": {
+              "type": "string",
+              "pattern": "^(dimension|measure|key)$",
+              "description": "Accepts dimension, measure, or key"
+            }
           },
           "required": ["name", "type"],
           "additionalProperties": false

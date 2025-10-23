@@ -1,0 +1,85 @@
+name: og_well
+label: Well
+description: An oil and/or gas well. It may be a producer or an injector.
+keys:
+  primary: well_guid
+  foreign:
+  - columns: production_area_guid
+    ref_table: og_production_area
+    ref_columns: production_area_guid
+  - columns: county_code
+    ref_table: og_county
+    ref_columns: county_code
+  - columns: producing_formation_guid
+    ref_table: og_formation
+    ref_columns: formation_guid
+columns:
+- name: well_guid
+  label: Well Guid
+  type: guid
+  description: The GUID of the well
+  nullable: false
+- name: well_name
+  label: Well Name
+  type: string
+  description: The name of the well
+  nullable: false
+- name: api_number
+  label: Api Number
+  type: string 10
+  description: The ten-digit API number of the well
+- name: spud_date
+  label: Spud Date
+  type: date
+  description: The date the well was spud
+- name: afe_number
+  label: Afe Number
+  type: string 10
+  description: The AFE number of the well
+- name: cost_center
+  label: Cost Center
+  type: string 25
+  description: The cost center of the well
+  nullable: false
+- name: well_type
+  label: Well Type
+  type: string 25
+  description: The type of the well (e.g. producer, injector)
+  nullable: false
+- name: well_status
+  label: Well Status
+  type: string 25
+  description: The status of the well (e.g. proposed, drilling, completing, producing, shut-in, abandoned)
+  nullable: false
+- name: latitude
+  label: Latitude
+  type: float
+  description: The latitude of surface location of the well
+- name: longitude
+  label: Longitude
+  type: float
+  description: The longitude of surface location of the well
+- name: surface_elevation
+  label: Surface Elevation
+  type: float
+  description: The surface elevation of surface location of the well with respect to sea level
+- name: production_area_guid
+  label: Production Area Guid
+  type: guid
+  description: The GUID of the production area the well is part of
+  nullable: false
+- name: county_code
+  label: County Code
+  type: string 5
+  description: The five-digit fips code of the county the well is part of
+  nullable: false
+- name: producing_formation_guid
+  label: Producing Formation Guid
+  type: guid
+  description: The GUID of the producing formation of the well
+  nullable: false
+- name: surface_coordinates
+  label: Surface Location Coordinates
+  type: string
+  spatial_type: point  
+  description: Surface Location in comma-separated string of geotype, longitude, latitude, and coordinate reference system

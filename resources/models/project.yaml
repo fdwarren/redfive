@@ -1,0 +1,9 @@
+name: upstream
+actions:
+  - type: yaml-to-ddl
+    target: postgres
+    schema: ${REDFIVE_TARGET_SCHEMA}
+  - type: yaml-to-ddl
+    target: snowflake
+    schema: ${REDFIVE_TARGET_SCHEMA}
+  

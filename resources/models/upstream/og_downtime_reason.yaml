@@ -1,0 +1,16 @@
+name: og_downtime_reason
+label: Downtime Reason
+description: The reason for downtime of a well
+keys:
+  primary: downtime_reason_guid
+columns:
+- name: downtime_reason_guid
+  label: Downtime Reason Guid
+  type: guid
+  description: The GUID of the downtime reason
+  nullable: false
+- name: downtime_reason_name
+  label: Downtime Reason Name
+  type: string 50
+  description: The name of the downtime reason
+  nullable: false

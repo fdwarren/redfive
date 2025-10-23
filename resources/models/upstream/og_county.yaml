@@ -1,0 +1,25 @@
+name: og_county
+label: County
+description: A county within a state
+keys:
+  primary: county_code
+  foreign:
+  - columns: state_code
+    ref_table: og_state
+    ref_columns: state_code
+columns:
+- name: county_code
+  label: County Code
+  type: string 5
+  description: The five-digit fips code of the county
+  nullable: false
+- name: county_name
+  label: County Name
+  type: string 50
+  description: The name of the county
+  nullable: false
+- name: state_code
+  label: State Code
+  type: string 2
+  description: The two-digit fips code of the state the county is part of
+  nullable: false

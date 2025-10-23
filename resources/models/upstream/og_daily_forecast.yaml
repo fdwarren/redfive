@@ -1,0 +1,38 @@
+name: og_daily_forecast
+label: Daily Forecast
+description: Daily production forecast for a well
+keys:
+  primary: well_guid, forecast_date
+  foreign:
+  - columns: well_guid
+    ref_table: og_well
+    ref_columns: well_guid
+  - columns: forecast_date
+    ref_table: og_calendar
+    ref_columns: date
+columns:
+- name: well_guid
+  label: Well Guid
+  type: guid
+  description: The GUID of the well
+  nullable: false
+- name: forecast_date
+  label: Forecast Date
+  type: date
+  description: The date of the forecast
+  nullable: false
+- name: forecast_oil_bbl
+  label: Forecasted Oil
+  type: float
+  description: Forecasted daily oil production in barrels
+  semantic_role: measure
+- name: forecast_gas_mcf
+  label: Forecasted Gas
+  type: float
+  description: Forecasted daily gas production in MCF
+  semantic_role: measure
+- name: forecast_water_bbl
+  label: Forecasted Water
+  type: float
+  description: Forecasted daily water production in barrels
+  semantic_role: measure

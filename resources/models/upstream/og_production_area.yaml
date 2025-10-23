@@ -1,0 +1,25 @@
+name: og_production_area
+label: Production Area
+description: A production area or field within an asset
+keys:
+  primary: production_area_guid
+  foreign:
+  - columns: asset_guid
+    ref_table: og_asset
+    ref_columns: asset_guid
+columns:
+- name: production_area_guid
+  label: Production Area Guid
+  type: guid
+  description: The GUID of the production area
+  nullable: false
+- name: production_area_name
+  label: Production Area Name
+  type: string 50
+  description: The name of the production area
+  nullable: false
+- name: asset_guid
+  label: Asset Guid
+  type: guid
+  description: The GUID of the asset this production area belongs to
+  nullable: false

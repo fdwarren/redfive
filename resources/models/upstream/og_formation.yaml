@@ -1,0 +1,16 @@
+name: og_formation
+label: Formation
+description: A geological formation that contains hydrocarbons
+keys:
+  primary: formation_guid
+columns:
+- name: formation_guid
+  label: Formation Guid
+  type: guid
+  description: The GUID of the formation
+  nullable: false
+- name: formation_name
+  label: Formation Name
+  type: string 50
+  description: The name of the formation
+  nullable: false

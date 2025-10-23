@@ -26,11 +26,11 @@ class RedFiveCore:
         
         Args:
             connection_string: Database connection string. If None, will use CONNECTION_STRING env var.
-            models_path: Path to models directory. If None, will use ./io/models.
+            models_path: Path to models directory. If None, will use ./resources/models.
         """
         self.connection_string = connection_string or os.getenv("CONNECTION_STRING")
-        self.models_path = Path(models_path) if models_path else Path(os.path.expanduser("./io/models"))
-        
+        # self.models_path = Path(models_path) if models_path else Path(os.path.expanduser("./resources/models"))
+        self.models_path = Path(__file__).resolve().parent.parent / "resources" / "models"
         # Global cache for models
         self._models_cache = None
         self._cache_timestamp = None
@@ -175,7 +175,8 @@ class RedFiveCore:
         table_names = expand_with_graph(graph, results)
         context = build_llm_context(models, table_names)
 
-        with open("./resources/schemas/sql-generation.schema.json", "r") as f:
+        sql_generation_schema_path = Path(__file__).resolve().parent.parent / "resources" / "schemas" / "sql-generation.schema.json"
+        with open(sql_generation_schema_path, "r") as f:
             sql_generation_schema = f.read()
 
         response = generate_sql(context, sql_generation_schema, user_query)
@@ -197,17 +198,6 @@ class RedFiveCore:
         """
         if not self.connection_string:
             raise ValueError("Database connection string not configured")
-        
-        # Check if SQL starts with SELECT (case insensitive)
-        sql_stripped = sql.strip().upper()
-        if not sql_stripped.startswith('SELECT'):
-            raise ValueError("Only SELECT statements are allowed. INSERT, UPDATE, DELETE operations are not permitted.")
-        
-        # Additional check for dangerous keywords
-        dangerous_keywords = ['INSERT', 'UPDATE', 'DELETE', 'DROP', 'CREATE', 'ALTER', 'TRUNCATE', 'EXEC', 'EXECUTE']
-        for keyword in dangerous_keywords:
-            if keyword in sql_stripped:
-                raise ValueError(f"Operation '{keyword}' is not allowed. Only SELECT statements are permitted.")
         
         try:
             engine = create_engine(self.connection_string)

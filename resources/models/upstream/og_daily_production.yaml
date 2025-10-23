@@ -1,0 +1,38 @@
+name: og_daily_production
+label: Daily Production
+description: Daily oil, gas, and water production of a well
+keys:
+  primary: well_guid, prod_date
+  foreign:
+  - columns: well_guid
+    ref_table: og_well
+    ref_columns: well_guid
+  - columns: prod_date
+    ref_table: og_calendar
+    ref_columns: date
+columns:
+- name: well_guid
+  label: Well Guid
+  type: guid
+  description: The GUID of the well
+  nullable: false
+- name: prod_date
+  label: Prod Date
+  type: date
+  description: The date of production
+  nullable: false
+- name: gross_oil_bbl
+  label: Oil Production
+  type: float
+  description: Daily oil production in barrels
+  semantic_role: measure
+- name: gross_gas_mcf
+  label: Gas Production
+  type: float
+  description: Daily gas production in MCF
+  semantic_role: measure
+- name: gross_water_bbl
+  label: Water Production
+  type: float
+  description: Daily water production in barrels
+  semantic_role: measure

@@ -1,0 +1,16 @@
+name: og_asset
+label: Asset
+description: An asset, region, or division within the company
+keys:
+  primary: asset_guid
+columns:
+- name: asset_guid
+  label: Asset Guid
+  type: guid
+  description: The GUID of the asset
+  nullable: false
+- name: asset_name
+  label: Asset Name
+  type: string 50
+  description: The name of the asset
+  nullable: false

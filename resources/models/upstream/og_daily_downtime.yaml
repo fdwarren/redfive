@@ -1,0 +1,44 @@
+name: og_daily_downtime
+label: Daily Downtime
+description: Daily downtime of a well. This information is generally provided by the
+  pumper.
+keys:
+  primary: well_guid, downtime_date
+  foreign:
+  - columns: well_guid
+    ref_table: og_well
+    ref_columns: well_guid
+  - columns: downtime_date
+    ref_table: og_calendar
+    ref_columns: date
+  - columns: downtime_type_guid
+    ref_table: og_downtime_type
+    ref_columns: downtime_type_guid
+  - columns: downtime_reason_guid
+    ref_table: og_downtime_reason
+    ref_columns: downtime_reason_guid
+columns:
+- name: well_guid
+  label: Well Guid
+  type: guid
+  description: The GUID of the well
+- name: downtime_date
+  label: Downtime Date
+  type: date
+  description: The date of the downtime
+- name: downtime_hours
+  label: Downtime Hours
+  type: integer
+  description: The hours of downtime of the well for a given date
+  nullable: false
+  semantic_role: measure
+- name: downtime_type_guid
+  label: Downtime Type Guid
+  type: guid
+  description: The GUID of the type of downtime (e.g. planned, unplanned)
+  nullable: false
+- name: downtime_reason_guid
+  label: Downtime Reason Guid
+  type: guid
+  description: The GUID of the reason for the downtime
+  nullable: false

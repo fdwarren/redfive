@@ -1,0 +1,16 @@
+name: og_state
+label: State
+description: A state within the United States
+keys:
+  primary: state_code
+columns:
+- name: state_code
+  label: State Code
+  type: string 2
+  description: The two-digit fips code of the state
+  nullable: false
+- name: state_name
+  label: State Name
+  type: string 50
+  description: The name of the state
+  nullable: false

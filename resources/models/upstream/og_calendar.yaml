@@ -1,0 +1,56 @@
+name: og_calendar
+label: Calendar
+description: Calendar dimension at day grain (one row per date)
+keys:
+  primary: date
+columns:
+- name: date
+  label: Date
+  type: date
+  description: Calendar date
+  nullable: false
+- name: day_of_month
+  label: Day Of Month
+  type: integer
+  description: Day of month (1-31)
+  nullable: false
+- name: month
+  label: Month
+  type: integer
+  description: Month number (1-12)
+  nullable: false
+- name: month_name
+  label: Month Name
+  type: string 20
+  description: Full month name
+  nullable: false
+- name: year
+  label: Year
+  type: integer
+  description: Gregorian calendar year
+  nullable: false
+- name: day_of_year
+  label: Day Of Year
+  type: integer
+  description: Day of year (1-366)
+  nullable: false
+- name: quarter
+  label: Quarter
+  type: integer
+  description: Quarter number (1-4)
+  nullable: false
+- name: day_of_week
+  label: Day Of Week
+  type: integer
+  description: Day of week (1=Monday - 7=Sunday, ISO-8601)
+  nullable: false
+- name: day_name
+  label: Day Name
+  type: string 10
+  description: Weekday name
+  nullable: false
+- name: week_of_year
+  label: Week Of Year
+  type: integer
+  description: Week of year (1-53, ISO-8601)
+  nullable: false
