@@ -1,0 +1,1260 @@
+2025-10-23 14:13:12,652 - logging_config - INFO - This is a test info message
+2025-10-23 14:13:12,652 - logging_config - WARNING - This is a test warning message
+2025-10-23 14:13:12,652 - logging_config - ERROR - This is a test error message
+2025-10-23 14:13:12,652 - logging_config - ERROR - Logging test failed: Database connection string not configured
+Traceback (most recent call last):
+  File "/Users/fredwarren/Projects/redfive/test_logging.py", line 23, in test_database_logging
+    db_logger = DatabaseLogger()
+  File "/Users/fredwarren/Projects/redfive/src/logging_config.py", line 34, in __init__
+    raise ValueError("Database connection string not configured")
+ValueError: Database connection string not configured
+2025-10-23 14:13:28,257 - logging_config - INFO - Test info message from logging system
+2025-10-23 14:13:28,258 - logging_config - WARNING - Test warning message from logging system
+2025-10-23 14:13:28,258 - logging_config - ERROR - Test error message from logging system
+2025-10-23 14:13:28,258 - logging_config - INFO - Structured log test: {"user_id": "test-123", "endpoint": "/generate-sql", "method": "POST", "timestamp": "2025-10-23T14:13:28.258136"}
+2025-10-23 14:14:00,930 - logging_config - INFO - This is a test info message
+2025-10-23 14:14:00,931 - logging_config - WARNING - This is a test warning message
+2025-10-23 14:14:00,931 - logging_config - ERROR - This is a test error message
+2025-10-23 14:14:00,931 - logging_config - ERROR - Logging test failed: Database connection string not configured
+Traceback (most recent call last):
+  File "/Users/fredwarren/Projects/redfive/test_logging.py", line 23, in test_database_logging
+    db_logger = DatabaseLogger()
+  File "/Users/fredwarren/Projects/redfive/src/logging_config.py", line 34, in __init__
+    raise ValueError("Database connection string not configured")
+ValueError: Database connection string not configured
+2025-10-23 14:14:10,089 - logging_config - INFO - This is a test info message
+2025-10-23 14:14:10,089 - logging_config - WARNING - This is a test warning message
+2025-10-23 14:14:10,089 - logging_config - ERROR - This is a test error message
+2025-10-23 14:14:11,253 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': 'test-request-123', 'user_id': 'test-user-123', 'user_email': 'test@example.com', 'user_name': 'Test User', 'http_method': 'POST', 'endpoint_path': '/generate-sql', 'query_params': '{"param1": "value1"}', 'request_headers': '{"Content-Type": "application/json"}', 'request_body': '{"query": "Show me all wells"}', 'request_body_size': 30, 'client_ip': '127.0.0.1', 'user_agent': 'Test Agent', 'sql_query': 'SELECT * FROM wells', 'query_type': 'sql_generation', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 11, 143582)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:11,448 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': '{"sql": "SELECT * FROM wells"}', 'response_body_size': 30, 'response_headers': '{"Content-Type": "application/json"}', 'processing_time_ms': 1500, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 11, 345283), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 11, 345301), 'request_id': 'test-request-123'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:11,637 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': 'test-error-456', 'user_id': 'test-user-456', 'user_email': 'error@example.com', 'user_name': 'Error User', 'http_method': 'POST', 'endpoint_path': '/execute-sql', 'query_params': None, 'request_headers': None, 'request_body': '{"sql": "INVALID SQL"}', 'request_body_size': 22, 'client_ip': None, 'user_agent': None, 'sql_query': None, 'query_type': 'sql_execution', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 11, 542030)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:11,823 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 500, 'response_body': '{"error": "SQL execution failed"}', 'response_body_size': 33, 'response_headers': None, 'processing_time_ms': 2000, 'error_message': 'SQL syntax error', 'error_type': 'SQLException', 'stack_trace': 'Traceback (most recent call last):\n  File...', 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 11, 729699), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 11, 729719), 'request_id': 'test-error-456'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:53,257 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': 'c7f42d70-baf4-44a6-a18c-6d9b86b2825e', 'user_id': None, 'user_email': None, 'user_name': None, 'http_method': 'POST', 'endpoint_path': '/auth/logout', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "content-length": "0", "sec-ch-ua-platform": "\\"macOS\\"", "user-agent": "Mozilla/5.0 (Macint ... (377 characters truncated) ... ch-storage-access": "active", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': None, 'request_body_size': 0, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'logout', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 53, 163745)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:53,258 - logging_config - INFO - REQUEST - ID: c7f42d70-baf4-44a6-a18c-6d9b86b2825e | User: None | Method: POST | Path: /auth/logout | Query: {} | Body Size: 0 bytes
+2025-10-23 14:14:53,445 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "37", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 977, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 53, 351170), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 53, 351180), 'request_id': 'c7f42d70-baf4-44a6-a18c-6d9b86b2825e'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:53,445 - logging_config - INFO - RESPONSE - ID: c7f42d70-baf4-44a6-a18c-6d9b86b2825e | Status: 200 | Processing Time: 977ms
+2025-10-23 14:14:56,126 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': '4f634422-d9a2-4a75-88ed-fde4d1a6da96', 'user_id': None, 'user_email': None, 'user_name': None, 'http_method': 'OPTIONS', 'endpoint_path': '/auth/google', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "accept": "*/*", "access-control-request-method": "POST", "access-control-request-headers": "c ... (239 characters truncated) ... ", "sec-fetch-dest": "empty", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': None, 'request_body_size': 0, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'authentication', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 56, 29359)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:56,127 - logging_config - INFO - REQUEST - ID: 4f634422-d9a2-4a75-88ed-fde4d1a6da96 | User: None | Method: OPTIONS | Path: /auth/google | Query: {} | Body Size: 0 bytes
+2025-10-23 14:14:56,318 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (49 characters truncated) ... origin": "http://localhost:5173", "access-control-allow-headers": "content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 192, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 56, 220984), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 56, 221001), 'request_id': '4f634422-d9a2-4a75-88ed-fde4d1a6da96'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:56,320 - logging_config - INFO - RESPONSE - ID: 4f634422-d9a2-4a75-88ed-fde4d1a6da96 | Status: 200 | Processing Time: 192ms
+2025-10-23 14:14:56,546 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': '619ace60-6530-4317-b0ef-6c11a394d28d', 'user_id': None, 'user_email': None, 'user_name': None, 'http_method': 'POST', 'endpoint_path': '/auth/google', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "content-length": "1198", "sec-ch-ua-platform": "\\"macOS\\"", "user-agent": "Mozilla/5.0 (Mac ... (416 characters truncated) ... ch-storage-access": "active", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': '{\n  "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg4NDg5MjEyMmUyOTM5ZmQxZjMxMzc1YjJiMzYzZWM4MTU3MjNiYmIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnR ... (907 characters truncated) ... VHehZ9FXWtvCXxLhJV5I9ff3GKIq29-8Tq1A_vztWuglihR3xHRJ2AhUzATHj1EmgawoD89lvg8P-BXKyTzyy8GIskb6lUp9pqq1EM6zcvmOM7LR2QcQfZ10Dd7iNM9f_4PHpwe7R4OjfA4Ug"\n}', 'request_body_size': 1203, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'authentication', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 56, 453011)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:56,547 - logging_config - INFO - REQUEST - ID: 619ace60-6530-4317-b0ef-6c11a394d28d | User: None | Method: POST | Path: /auth/google | Query: {} | Body Size: 1203 bytes
+2025-10-23 14:14:56,899 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "413", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 381, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 56, 805328), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 56, 805341), 'request_id': '619ace60-6530-4317-b0ef-6c11a394d28d'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:56,901 - logging_config - INFO - RESPONSE - ID: 619ace60-6530-4317-b0ef-6c11a394d28d | Status: 200 | Processing Time: 381ms
+2025-10-23 14:14:58,371 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': '336c879b-24a0-4989-96d2-6398a4ec173b', 'user_id': None, 'user_email': None, 'user_name': None, 'http_method': 'OPTIONS', 'endpoint_path': '/get-models', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "cache-control": "max-age=0", "accept": "*/*", "access-control-request-method": "GET", "access ... (282 characters truncated) ... ", "sec-fetch-dest": "empty", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': None, 'request_body_size': 0, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'model_retrieval', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 58, 280229)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:58,372 - logging_config - INFO - REQUEST - ID: 336c879b-24a0-4989-96d2-6398a4ec173b | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:14:58,564 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': 'd513d7ff-6f0a-4832-856e-b8419a26c6b3', 'user_id': None, 'user_email': None, 'user_name': None, 'http_method': 'OPTIONS', 'endpoint_path': '/get-models', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "cache-control": "max-age=0", "accept": "*/*", "access-control-request-method": "GET", "access ... (282 characters truncated) ... ", "sec-fetch-dest": "empty", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': None, 'request_body_size': 0, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'model_retrieval', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 58, 467725)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:58,565 - logging_config - INFO - REQUEST - ID: d513d7ff-6f0a-4832-856e-b8419a26c6b3 | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:14:58,753 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 379, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 58, 660097), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 58, 660134), 'request_id': '336c879b-24a0-4989-96d2-6398a4ec173b'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:58,754 - logging_config - INFO - RESPONSE - ID: 336c879b-24a0-4989-96d2-6398a4ec173b | Status: 200 | Processing Time: 379ms
+2025-10-23 14:14:58,954 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 382, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 58, 853918), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 58, 853945), 'request_id': 'd513d7ff-6f0a-4832-856e-b8419a26c6b3'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:58,954 - logging_config - INFO - RESPONSE - ID: d513d7ff-6f0a-4832-856e-b8419a26c6b3 | Status: 200 | Processing Time: 382ms
+2025-10-23 14:14:59,148 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': '05aedac7-7990-4200-b787-fb7a0c9e4225', 'user_id': '100722479914769978410', 'user_email': None, 'user_name': None, 'http_method': 'GET', 'endpoint_path': '/get-models', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua-platform": "\\"macOS\\"", "user-agent": "Mozilla/5.0  ... (433 characters truncated) ... ch-storage-access": "active", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': None, 'request_body_size': 0, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'model_retrieval', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 59, 51068)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:59,149 - logging_config - INFO - REQUEST - ID: 05aedac7-7990-4200-b787-fb7a0c9e4225 | User: None | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:14:59,359 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 219, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 59, 267770), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 59, 267783), 'request_id': '05aedac7-7990-4200-b787-fb7a0c9e4225'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:59,360 - logging_config - INFO - RESPONSE - ID: 05aedac7-7990-4200-b787-fb7a0c9e4225 | Status: 200 | Processing Time: 219ms
+2025-10-23 14:14:59,558 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': '010a4bb5-0db0-4b3b-9449-1f277bc5843e', 'user_id': '100722479914769978410', 'user_email': None, 'user_name': None, 'http_method': 'GET', 'endpoint_path': '/get-models', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua-platform": "\\"macOS\\"", "user-agent": "Mozilla/5.0  ... (433 characters truncated) ... ch-storage-access": "active", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': None, 'request_body_size': 0, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'model_retrieval', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 59, 462596)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:59,559 - logging_config - INFO - REQUEST - ID: 010a4bb5-0db0-4b3b-9449-1f277bc5843e | User: None | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:14:59,760 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 204, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 14, 59, 663373), 'updated_at': datetime.datetime(2025, 10, 23, 14, 14, 59, 663413), 'request_id': '010a4bb5-0db0-4b3b-9449-1f277bc5843e'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:14:59,763 - logging_config - INFO - RESPONSE - ID: 010a4bb5-0db0-4b3b-9449-1f277bc5843e | Status: 200 | Processing Time: 204ms
+2025-10-23 14:15:09,969 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': 'c12f2d01-1792-4600-93c6-be161ef5e6d2', 'user_id': None, 'user_email': None, 'user_name': None, 'http_method': 'OPTIONS', 'endpoint_path': '/execute-sql', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "cache-control": "max-age=0", "accept": "*/*", "access-control-request-method": "POST", "acces ... (283 characters truncated) ... ", "sec-fetch-dest": "empty", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': None, 'request_body_size': 0, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': None, 'query_type': 'sql_execution', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 15, 9, 877119)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:15:09,969 - logging_config - INFO - REQUEST - ID: c12f2d01-1792-4600-93c6-be161ef5e6d2 | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:15:10,157 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 193, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 15, 10, 62906), 'updated_at': datetime.datetime(2025, 10, 23, 14, 15, 10, 62931), 'request_id': 'c12f2d01-1792-4600-93c6-be161ef5e6d2'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:15:10,158 - logging_config - INFO - RESPONSE - ID: c12f2d01-1792-4600-93c6-be161ef5e6d2 | Status: 200 | Processing Time: 193ms
+2025-10-23 14:15:10,350 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': 'c765c0ba-8c79-4579-9cbf-cfa82243bb4f', 'user_id': '100722479914769978410', 'user_email': None, 'user_name': None, 'http_method': 'POST', 'endpoint_path': '/execute-sql', 'query_params': None, 'request_headers': '{"host": "127.0.0.1:8000", "connection": "keep-alive", "content-length": "44", "cache-control": "max-age=0", "sec-ch-ua-platform": "\\"macOS\\"", "us ... (457 characters truncated) ... ch-storage-access": "active", "referer": "http://localhost:5173/", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}', 'request_body': '{\n  "sql": "select *\\nfrom og_daily_production"\n}', 'request_body_size': 49, 'client_ip': '127.0.0.1', 'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'sql_query': 'select *\nfrom og_daily_production', 'query_type': 'sql_execution', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 15, 10, 256828)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:15:10,350 - logging_config - INFO - REQUEST - ID: c765c0ba-8c79-4579-9cbf-cfa82243bb4f | User: None | Method: POST | Path: /execute-sql | Query: {} | Body Size: 49 bytes
+2025-10-23 14:15:10,352 - logging_config - INFO - SQL Execution Request - User: fdwarren@gmail.com | SQL: select *
+from og_daily_production...
+2025-10-23 14:15:11,488 - logging_config - INFO - SQL Execution Success - User: fdwarren@gmail.com | Rows: 3405
+2025-10-23 14:15:11,690 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "508434", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 1340, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 15, 11, 597340), 'updated_at': datetime.datetime(2025, 10, 23, 14, 15, 11, 597363), 'request_id': 'c765c0ba-8c79-4579-9cbf-cfa82243bb4f'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:15:11,690 - logging_config - INFO - RESPONSE - ID: c765c0ba-8c79-4579-9cbf-cfa82243bb4f | Status: 200 | Processing Time: 1340ms
+2025-10-23 14:20:49,012 - logging_config - ERROR - Failed to log request to database: (psycopg2.errors.InsufficientPrivilege) permission denied for schema redfive
+LINE 2:                     INSERT INTO redfive.api_request_logs (
+                                        ^
+
+[SQL: 
+                    INSERT INTO redfive.api_request_logs (
+                        request_id, user_id, user_email, user_name,
+                        http_method, endpoint_path, query_params, request_headers,
+                        request_body, request_body_size, client_ip, user_agent,
+                        sql_query, query_type, request_timestamp
+                    ) VALUES (
+                        %(request_id)s, %(user_id)s, %(user_email)s, %(user_name)s,
+                        %(http_method)s, %(endpoint_path)s, %(query_params)s, %(request_headers)s,
+                        %(request_body)s, %(request_body_size)s, %(client_ip)s, %(user_agent)s,
+                        %(sql_query)s, %(query_type)s, %(request_timestamp)s
+                    )
+                ]
+[parameters: {'request_id': 'test-connection-123', 'user_id': 'test-user', 'user_email': 'test@example.com', 'user_name': 'Test User', 'http_method': 'GET', 'endpoint_path': '/test', 'query_params': None, 'request_headers': None, 'request_body': None, 'request_body_size': 0, 'client_ip': None, 'user_agent': None, 'sql_query': None, 'query_type': 'connection_test', 'request_timestamp': datetime.datetime(2025, 10, 23, 14, 20, 48, 919017)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:20:49,195 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for schema redfive
+LINE 2:                     UPDATE redfive.api_request_logs 
+                                   ^
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': None, 'processing_time_ms': 100, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 20, 49, 103793), 'updated_at': datetime.datetime(2025, 10, 23, 14, 20, 49, 103801), 'request_id': 'test-connection-123'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:22:43,003 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': None, 'processing_time_ms': 100, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 22, 42, 903243), 'updated_at': datetime.datetime(2025, 10, 23, 14, 22, 42, 903251), 'request_id': 'test-logging-connection-123'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:08,765 - logging_config - INFO - REQUEST - ID: 64c47d8e-056b-407f-8ec1-730014cc89ab | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:08,960 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 981, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 8, 861378), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 8, 861398), 'request_id': '64c47d8e-056b-407f-8ec1-730014cc89ab'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:08,961 - logging_config - INFO - RESPONSE - ID: 64c47d8e-056b-407f-8ec1-730014cc89ab | Status: 200 | Processing Time: 981ms
+2025-10-23 14:23:09,157 - logging_config - INFO - REQUEST - ID: ad6c88eb-47b2-4479-9083-532331b78bd6 | User: None | Method: POST | Path: /execute-sql | Query: {} | Body Size: 49 bytes
+2025-10-23 14:23:09,353 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 401, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"www-authenticate": "Bearer", "content-length": "43", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 199, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 9, 259175), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 9, 259190), 'request_id': 'ad6c88eb-47b2-4479-9083-532331b78bd6'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:09,353 - logging_config - INFO - RESPONSE - ID: ad6c88eb-47b2-4479-9083-532331b78bd6 | Status: 401 | Processing Time: 199ms
+2025-10-23 14:23:16,938 - logging_config - INFO - REQUEST - ID: 500e2ab7-e1dd-476c-bba9-52c839aedcb3 | User: None | Method: POST | Path: /auth/logout | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:17,128 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "37", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 190, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 17, 31845), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 17, 31863), 'request_id': '500e2ab7-e1dd-476c-bba9-52c839aedcb3'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:17,129 - logging_config - INFO - RESPONSE - ID: 500e2ab7-e1dd-476c-bba9-52c839aedcb3 | Status: 200 | Processing Time: 190ms
+2025-10-23 14:23:20,092 - logging_config - INFO - REQUEST - ID: 61c9b4a7-e97c-43fb-9dd9-78d3315bf785 | User: None | Method: POST | Path: /auth/google | Query: {} | Body Size: 1203 bytes
+2025-10-23 14:23:20,431 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "413", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 350, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 20, 333657), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 20, 333667), 'request_id': '61c9b4a7-e97c-43fb-9dd9-78d3315bf785'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:20,432 - logging_config - INFO - RESPONSE - ID: 61c9b4a7-e97c-43fb-9dd9-78d3315bf785 | Status: 200 | Processing Time: 350ms
+2025-10-23 14:23:21,913 - logging_config - INFO - REQUEST - ID: 38b640d6-90c3-49fa-afef-ea88503cdebe | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:22,105 - logging_config - INFO - REQUEST - ID: d584188c-55b1-4d8d-86eb-254b75b7c132 | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:22,304 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 377, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 22, 200345), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 22, 200377), 'request_id': '38b640d6-90c3-49fa-afef-ea88503cdebe'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:22,306 - logging_config - INFO - RESPONSE - ID: 38b640d6-90c3-49fa-afef-ea88503cdebe | Status: 200 | Processing Time: 377ms
+2025-10-23 14:23:22,503 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 393, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 22, 406043), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 22, 406082), 'request_id': 'd584188c-55b1-4d8d-86eb-254b75b7c132'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:22,503 - logging_config - INFO - RESPONSE - ID: d584188c-55b1-4d8d-86eb-254b75b7c132 | Status: 200 | Processing Time: 393ms
+2025-10-23 14:23:22,691 - logging_config - INFO - REQUEST - ID: d40bb20b-48e4-4547-88e5-ce59345b63b8 | User: None | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:22,903 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 212, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 22, 809048), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 22, 809056), 'request_id': 'd40bb20b-48e4-4547-88e5-ce59345b63b8'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:22,904 - logging_config - INFO - RESPONSE - ID: d40bb20b-48e4-4547-88e5-ce59345b63b8 | Status: 200 | Processing Time: 212ms
+2025-10-23 14:23:23,108 - logging_config - INFO - REQUEST - ID: 5cd77e04-e7b4-4d6a-a992-3d3563983c51 | User: None | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:23,305 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 206, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 23, 207670), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 23, 207709), 'request_id': '5cd77e04-e7b4-4d6a-a992-3d3563983c51'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:23,307 - logging_config - INFO - RESPONSE - ID: 5cd77e04-e7b4-4d6a-a992-3d3563983c51 | Status: 200 | Processing Time: 206ms
+2025-10-23 14:23:28,598 - logging_config - INFO - REQUEST - ID: 4210cbca-cca7-4349-92fb-9fba7209020b | User: None | Method: OPTIONS | Path: /generate-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:28,791 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 186, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 28, 694104), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 28, 694124), 'request_id': '4210cbca-cca7-4349-92fb-9fba7209020b'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:28,791 - logging_config - INFO - RESPONSE - ID: 4210cbca-cca7-4349-92fb-9fba7209020b | Status: 200 | Processing Time: 186ms
+2025-10-23 14:23:28,986 - logging_config - INFO - REQUEST - ID: 6e1d4624-b3e6-48de-b6b9-a09398d11712 | User: None | Method: POST | Path: /generate-sql | Query: {} | Body Size: 31 bytes
+2025-10-23 14:23:28,988 - logging_config - INFO - SQL Generation Request - User: fdwarren@gmail.com | Query: how many wells...
+2025-10-23 14:23:29,732 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-10-23 14:23:31,781 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-23 14:23:31,790 - logging_config - INFO - SQL Generation Success - User: fdwarren@gmail.com | Response Type: <class 'dict'>
+2025-10-23 14:23:31,977 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "79", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 2996, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 31, 883474), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 31, 883480), 'request_id': '6e1d4624-b3e6-48de-b6b9-a09398d11712'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:31,978 - logging_config - INFO - RESPONSE - ID: 6e1d4624-b3e6-48de-b6b9-a09398d11712 | Status: 200 | Processing Time: 2996ms
+2025-10-23 14:23:35,392 - logging_config - INFO - REQUEST - ID: 76f62487-a58f-4fa5-be61-0b80f8b390b6 | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:23:35,586 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 195, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 35, 490704), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 35, 490741), 'request_id': '76f62487-a58f-4fa5-be61-0b80f8b390b6'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:35,588 - logging_config - INFO - RESPONSE - ID: 76f62487-a58f-4fa5-be61-0b80f8b390b6 | Status: 200 | Processing Time: 195ms
+2025-10-23 14:23:35,789 - logging_config - INFO - REQUEST - ID: d1bc5d2b-78c4-48d8-870a-a2dcb28dcfd6 | User: None | Method: POST | Path: /execute-sql | Query: {} | Body Size: 84 bytes
+2025-10-23 14:23:35,792 - logging_config - INFO - SQL Execution Request - User: fdwarren@gmail.com | SQL: SELECT COUNT(DISTINCT well_guid) AS well_count FROM upstream.og_well;...
+2025-10-23 14:23:36,721 - logging_config - INFO - SQL Execution Success - User: fdwarren@gmail.com | Rows: 1
+2025-10-23 14:23:36,913 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "89", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 1124, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 23, 36, 820590), 'updated_at': datetime.datetime(2025, 10, 23, 14, 23, 36, 820608), 'request_id': 'd1bc5d2b-78c4-48d8-870a-a2dcb28dcfd6'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:23:36,914 - logging_config - INFO - RESPONSE - ID: d1bc5d2b-78c4-48d8-870a-a2dcb28dcfd6 | Status: 200 | Processing Time: 1124ms
+2025-10-23 14:25:52,079 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': None, 'processing_time_ms': 100, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 25, 51, 985049), 'updated_at': datetime.datetime(2025, 10, 23, 14, 25, 51, 985067), 'request_id': 'test-user-context-123'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:18,850 - logging_config - INFO - REQUEST - ID: bfe71050-7dfd-4fa2-938f-619052bcce76 | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:26:19,037 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 197, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 18, 943151), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 18, 943161), 'request_id': 'bfe71050-7dfd-4fa2-938f-619052bcce76'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:19,038 - logging_config - INFO - RESPONSE - ID: bfe71050-7dfd-4fa2-938f-619052bcce76 | Status: 200 | Processing Time: 197ms
+2025-10-23 14:26:19,237 - logging_config - INFO - REQUEST - ID: 4ee06f80-1b95-4702-a760-671692ec1204 | User: None | Method: POST | Path: /execute-sql | Query: {} | Body Size: 84 bytes
+2025-10-23 14:26:19,239 - logging_config - INFO - SQL Execution Request - User: fdwarren@gmail.com | SQL: SELECT COUNT(DISTINCT well_guid) AS well_count FROM upstream.og_well;...
+2025-10-23 14:26:20,153 - logging_config - INFO - SQL Execution Success - User: fdwarren@gmail.com | Rows: 1
+2025-10-23 14:26:20,338 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "89", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 1110, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 20, 246472), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 20, 246477), 'request_id': '4ee06f80-1b95-4702-a760-671692ec1204'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:20,339 - logging_config - INFO - RESPONSE - ID: 4ee06f80-1b95-4702-a760-671692ec1204 | Status: 200 | Processing Time: 1110ms
+2025-10-23 14:26:49,690 - logging_config - INFO - REQUEST - ID: 091ae04b-0ad4-48ac-82fe-c449ea37a819 | User: None | Method: POST | Path: /auth/logout | Query: {} | Body Size: 0 bytes
+2025-10-23 14:26:49,879 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "37", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 1039, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 49, 784673), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 49, 784698), 'request_id': '091ae04b-0ad4-48ac-82fe-c449ea37a819'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:49,879 - logging_config - INFO - RESPONSE - ID: 091ae04b-0ad4-48ac-82fe-c449ea37a819 | Status: 200 | Processing Time: 1039ms
+2025-10-23 14:26:52,711 - logging_config - INFO - REQUEST - ID: efb8bdf3-914d-4558-860e-0370eb63416b | User: None | Method: OPTIONS | Path: /auth/google | Query: {} | Body Size: 0 bytes
+2025-10-23 14:26:52,904 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (49 characters truncated) ... origin": "http://localhost:5173", "access-control-allow-headers": "content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 186, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 52, 810795), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 52, 810827), 'request_id': 'efb8bdf3-914d-4558-860e-0370eb63416b'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:52,905 - logging_config - INFO - RESPONSE - ID: efb8bdf3-914d-4558-860e-0370eb63416b | Status: 200 | Processing Time: 186ms
+2025-10-23 14:26:53,091 - logging_config - INFO - REQUEST - ID: 880008ab-e4a2-45ec-86f2-c07923907783 | User: None | Method: POST | Path: /auth/google | Query: {} | Body Size: 1203 bytes
+2025-10-23 14:26:53,451 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "413", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 354, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 53, 354106), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 53, 354126), 'request_id': '880008ab-e4a2-45ec-86f2-c07923907783'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:53,452 - logging_config - INFO - RESPONSE - ID: 880008ab-e4a2-45ec-86f2-c07923907783 | Status: 200 | Processing Time: 354ms
+2025-10-23 14:26:54,797 - logging_config - INFO - REQUEST - ID: a5ad8288-ad8f-4cbd-9e0f-5561e99b5b98 | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:26:54,987 - logging_config - INFO - REQUEST - ID: 71a95be0-532a-42fe-a2e9-ea9f476d8874 | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:26:55,192 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 377, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 55, 85320), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 55, 85336), 'request_id': 'a5ad8288-ad8f-4cbd-9e0f-5561e99b5b98'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:55,194 - logging_config - INFO - RESPONSE - ID: a5ad8288-ad8f-4cbd-9e0f-5561e99b5b98 | Status: 200 | Processing Time: 377ms
+2025-10-23 14:26:55,387 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 400, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 55, 293627), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 55, 293645), 'request_id': '71a95be0-532a-42fe-a2e9-ea9f476d8874'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:55,388 - logging_config - INFO - RESPONSE - ID: 71a95be0-532a-42fe-a2e9-ea9f476d8874 | Status: 200 | Processing Time: 400ms
+2025-10-23 14:26:55,585 - logging_config - INFO - REQUEST - ID: a2da5845-bbc8-4ff3-913c-4ae5cc68ea97 | User: fdwarren@gmail.com | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:26:55,807 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 230, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 55, 714449), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 55, 714455), 'request_id': 'a2da5845-bbc8-4ff3-913c-4ae5cc68ea97'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:55,807 - logging_config - INFO - RESPONSE - ID: a2da5845-bbc8-4ff3-913c-4ae5cc68ea97 | Status: 200 | Processing Time: 230ms
+2025-10-23 14:26:56,000 - logging_config - INFO - REQUEST - ID: 7a7e934a-a88e-4cf1-a788-48e0efdc8808 | User: fdwarren@gmail.com | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:26:56,202 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 196, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 26, 56, 107556), 'updated_at': datetime.datetime(2025, 10, 23, 14, 26, 56, 107627), 'request_id': '7a7e934a-a88e-4cf1-a788-48e0efdc8808'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:26:56,202 - logging_config - INFO - RESPONSE - ID: 7a7e934a-a88e-4cf1-a788-48e0efdc8808 | Status: 200 | Processing Time: 196ms
+2025-10-23 14:27:03,657 - logging_config - INFO - REQUEST - ID: 2e53ac2e-cccf-46eb-818c-20711ddc924e | User: None | Method: OPTIONS | Path: /generate-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:27:03,843 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 196, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 27, 3, 750594), 'updated_at': datetime.datetime(2025, 10, 23, 14, 27, 3, 750604), 'request_id': '2e53ac2e-cccf-46eb-818c-20711ddc924e'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:27:03,843 - logging_config - INFO - RESPONSE - ID: 2e53ac2e-cccf-46eb-818c-20711ddc924e | Status: 200 | Processing Time: 196ms
+2025-10-23 14:27:04,030 - logging_config - INFO - REQUEST - ID: 7033af46-7088-43e9-b018-34d54be648ef | User: fdwarren@gmail.com | Method: POST | Path: /generate-sql | Query: {} | Body Size: 31 bytes
+2025-10-23 14:27:04,032 - logging_config - INFO - SQL Generation Request - User: fdwarren@gmail.com | Query: how many wells...
+2025-10-23 14:27:05,441 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-10-23 14:27:07,232 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-23 14:27:07,245 - logging_config - INFO - SQL Generation Success - User: fdwarren@gmail.com | Response Type: <class 'dict'>
+2025-10-23 14:27:07,437 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "62", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 3401, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 27, 7, 339352), 'updated_at': datetime.datetime(2025, 10, 23, 14, 27, 7, 339365), 'request_id': '7033af46-7088-43e9-b018-34d54be648ef'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:27:07,438 - logging_config - INFO - RESPONSE - ID: 7033af46-7088-43e9-b018-34d54be648ef | Status: 200 | Processing Time: 3401ms
+2025-10-23 14:27:11,057 - logging_config - INFO - REQUEST - ID: f361b5d4-73c7-4452-a3e0-7a8265359d54 | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:27:11,253 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 187, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 27, 11, 155880), 'updated_at': datetime.datetime(2025, 10, 23, 14, 27, 11, 155906), 'request_id': 'f361b5d4-73c7-4452-a3e0-7a8265359d54'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:27:11,253 - logging_config - INFO - RESPONSE - ID: f361b5d4-73c7-4452-a3e0-7a8265359d54 | Status: 200 | Processing Time: 187ms
+2025-10-23 14:27:11,448 - logging_config - INFO - REQUEST - ID: 0d280ce5-d8c3-4f10-bcb8-46745bcfff9a | User: fdwarren@gmail.com | Method: POST | Path: /execute-sql | Query: {} | Body Size: 71 bytes
+2025-10-23 14:27:11,451 - logging_config - INFO - SQL Execution Request - User: fdwarren@gmail.com | SQL: 
+
+SELECT COUNT(*) AS well_count FROM upstream.og_well;...
+2025-10-23 14:27:12,401 - logging_config - INFO - SQL Execution Success - User: fdwarren@gmail.com | Rows: 1
+2025-10-23 14:27:12,595 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "89", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 1143, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 27, 12, 499918), 'updated_at': datetime.datetime(2025, 10, 23, 14, 27, 12, 499938), 'request_id': '0d280ce5-d8c3-4f10-bcb8-46745bcfff9a'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:27:12,595 - logging_config - INFO - RESPONSE - ID: 0d280ce5-d8c3-4f10-bcb8-46745bcfff9a | Status: 200 | Processing Time: 1143ms
+2025-10-23 14:29:16,087 - logging_config - INFO - REQUEST - ID: 6169d8a4-8068-407b-b8b5-3efd1cdd1384 | User: None | Method: POST | Path: /auth/logout | Query: {} | Body Size: 0 bytes
+2025-10-23 14:29:16,292 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "37", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 1131, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 16, 188069), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 16, 188074), 'request_id': '6169d8a4-8068-407b-b8b5-3efd1cdd1384'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:16,292 - logging_config - INFO - RESPONSE - ID: 6169d8a4-8068-407b-b8b5-3efd1cdd1384 | Status: 200 | Processing Time: 1131ms
+2025-10-23 14:29:18,221 - logging_config - INFO - REQUEST - ID: 90645d96-02ba-4530-b252-fb335e57687c | User: None | Method: POST | Path: /auth/google | Query: {} | Body Size: 1203 bytes
+2025-10-23 14:29:18,561 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "413", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 331, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 18, 460506), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 18, 460522), 'request_id': '90645d96-02ba-4530-b252-fb335e57687c'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:18,562 - logging_config - INFO - RESPONSE - ID: 90645d96-02ba-4530-b252-fb335e57687c | Status: 200 | Processing Time: 331ms
+2025-10-23 14:29:19,909 - logging_config - INFO - REQUEST - ID: eab54775-5210-4a8e-89ba-54b60858a5ff | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:29:20,096 - logging_config - INFO - REQUEST - ID: b2c74272-0f39-4787-8cbd-b8872053cd30 | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:29:20,285 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 377, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 20, 191064), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 20, 191085), 'request_id': 'eab54775-5210-4a8e-89ba-54b60858a5ff'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:20,286 - logging_config - INFO - RESPONSE - ID: eab54775-5210-4a8e-89ba-54b60858a5ff | Status: 200 | Processing Time: 377ms
+2025-10-23 14:29:20,477 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 377, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 20, 381890), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 20, 381914), 'request_id': 'b2c74272-0f39-4787-8cbd-b8872053cd30'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:20,477 - logging_config - INFO - RESPONSE - ID: b2c74272-0f39-4787-8cbd-b8872053cd30 | Status: 200 | Processing Time: 377ms
+2025-10-23 14:29:20,677 - logging_config - INFO - REQUEST - ID: 14b394bb-cfbb-416e-a7ab-29c68600f08c | User: fdwarren@gmail.com | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:29:20,890 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 220, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 20, 793206), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 20, 793214), 'request_id': '14b394bb-cfbb-416e-a7ab-29c68600f08c'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:20,894 - logging_config - INFO - RESPONSE - ID: 14b394bb-cfbb-416e-a7ab-29c68600f08c | Status: 200 | Processing Time: 220ms
+2025-10-23 14:29:21,090 - logging_config - INFO - REQUEST - ID: 3c26dcdc-817e-40ba-bd59-f39f5670be42 | User: fdwarren@gmail.com | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:29:21,287 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "12013", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 192, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 21, 192019), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 21, 192033), 'request_id': '3c26dcdc-817e-40ba-bd59-f39f5670be42'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:21,288 - logging_config - INFO - RESPONSE - ID: 3c26dcdc-817e-40ba-bd59-f39f5670be42 | Status: 200 | Processing Time: 192ms
+2025-10-23 14:29:25,646 - logging_config - INFO - REQUEST - ID: b470860d-1546-4105-90cd-84b2c1af41a0 | User: None | Method: OPTIONS | Path: /generate-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:29:25,837 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 196, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 25, 740326), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 25, 740343), 'request_id': 'b470860d-1546-4105-90cd-84b2c1af41a0'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:25,837 - logging_config - INFO - RESPONSE - ID: b470860d-1546-4105-90cd-84b2c1af41a0 | Status: 200 | Processing Time: 196ms
+2025-10-23 14:29:26,034 - logging_config - INFO - REQUEST - ID: 2490a008-8417-48b5-a22a-2df4af0849ac | User: fdwarren@gmail.com | Method: POST | Path: /generate-sql | Query: {} | Body Size: 31 bytes
+2025-10-23 14:29:26,036 - logging_config - INFO - SQL Generation Request - User: fdwarren@gmail.com | Query: how many wells...
+2025-10-23 14:29:27,755 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-10-23 14:29:30,288 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-23 14:29:30,303 - logging_config - INFO - SQL Generation Success - User: fdwarren@gmail.com | Response Type: <class 'dict'>
+2025-10-23 14:29:30,501 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "62", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 4465, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 30, 401096), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 30, 401107), 'request_id': '2490a008-8417-48b5-a22a-2df4af0849ac'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:30,501 - logging_config - INFO - RESPONSE - ID: 2490a008-8417-48b5-a22a-2df4af0849ac | Status: 200 | Processing Time: 4465ms
+2025-10-23 14:29:33,910 - logging_config - INFO - REQUEST - ID: 168d0799-5490-4d87-8431-80044842c225 | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:29:34,101 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"vary": "Origin", "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT", "access-control-max-age": "600", "access-control-a ... (63 characters truncated) ... ://localhost:5173", "access-control-allow-headers": "authorization,content-type", "content-length": "2", "content-type": "text/plain; charset=utf-8"}', 'processing_time_ms': 196, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 34, 7076), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 34, 7083), 'request_id': '168d0799-5490-4d87-8431-80044842c225'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:34,102 - logging_config - INFO - RESPONSE - ID: 168d0799-5490-4d87-8431-80044842c225 | Status: 200 | Processing Time: 196ms
+2025-10-23 14:29:34,302 - logging_config - INFO - REQUEST - ID: 0c7165e9-f4b8-424f-a352-4c53987e61f2 | User: fdwarren@gmail.com | Method: POST | Path: /execute-sql | Query: {} | Body Size: 67 bytes
+2025-10-23 14:29:34,306 - logging_config - INFO - SQL Execution Request - User: fdwarren@gmail.com | SQL: SELECT COUNT(*) AS well_count FROM upstream.og_well;...
+2025-10-23 14:29:35,257 - logging_config - INFO - SQL Execution Success - User: fdwarren@gmail.com | Rows: 1
+2025-10-23 14:29:35,450 - logging_config - ERROR - Failed to log response to database: (psycopg2.errors.InsufficientPrivilege) permission denied for table api_request_logs
+
+[SQL: 
+                    UPDATE redfive.api_request_logs 
+                    SET response_status_code = %(response_status_code)s,
+                        response_body = %(response_body)s,
+                        response_body_size = %(response_body_size)s,
+                        response_headers = %(response_headers)s,
+                        processing_time_ms = %(processing_time_ms)s,
+                        error_message = %(error_message)s,
+                        error_type = %(error_type)s,
+                        stack_trace = %(stack_trace)s,
+                        response_timestamp = %(response_timestamp)s,
+                        updated_at = %(updated_at)s
+                    WHERE request_id = %(request_id)s
+                ]
+[parameters: {'response_status_code': 200, 'response_body': None, 'response_body_size': 0, 'response_headers': '{"content-length": "89", "content-type": "application/json", "access-control-allow-credentials": "true", "access-control-allow-origin": "http://localhost:5173", "vary": "Origin"}', 'processing_time_ms': 1151, 'error_message': None, 'error_type': None, 'stack_trace': None, 'response_timestamp': datetime.datetime(2025, 10, 23, 14, 29, 35, 354080), 'updated_at': datetime.datetime(2025, 10, 23, 14, 29, 35, 354100), 'request_id': '0c7165e9-f4b8-424f-a352-4c53987e61f2'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-10-23 14:29:35,451 - logging_config - INFO - RESPONSE - ID: 0c7165e9-f4b8-424f-a352-4c53987e61f2 | Status: 200 | Processing Time: 1151ms
+2025-10-23 14:31:49,013 - logging_config - INFO - REQUEST - ID: 174bf50a-d8a8-4805-b749-d435c6f3b674 | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:31:49,231 - logging_config - INFO - RESPONSE - ID: 174bf50a-d8a8-4805-b749-d435c6f3b674 | Status: 200 | Processing Time: 1018ms
+2025-10-23 14:31:49,447 - logging_config - INFO - REQUEST - ID: 52258dd8-06b3-4b09-8d58-e71daee7938f | User: None | Method: POST | Path: /execute-sql | Query: {} | Body Size: 67 bytes
+2025-10-23 14:31:49,645 - logging_config - INFO - RESPONSE - ID: 52258dd8-06b3-4b09-8d58-e71daee7938f | Status: 401 | Processing Time: 211ms
+2025-10-23 14:31:52,026 - logging_config - INFO - REQUEST - ID: fb37bc66-860a-4919-a5c5-286ff2d923ce | User: None | Method: POST | Path: /auth/logout | Query: {} | Body Size: 0 bytes
+2025-10-23 14:31:52,216 - logging_config - INFO - RESPONSE - ID: fb37bc66-860a-4919-a5c5-286ff2d923ce | Status: 200 | Processing Time: 196ms
+2025-10-23 14:31:54,987 - logging_config - INFO - REQUEST - ID: d3ee25ff-040c-45ad-9b82-f734f1d89875 | User: None | Method: POST | Path: /auth/google | Query: {} | Body Size: 1203 bytes
+2025-10-23 14:31:55,318 - logging_config - INFO - RESPONSE - ID: d3ee25ff-040c-45ad-9b82-f734f1d89875 | Status: 200 | Processing Time: 327ms
+2025-10-23 14:31:56,659 - logging_config - INFO - REQUEST - ID: c5222824-1204-437f-a309-a34cf240e262 | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:31:56,852 - logging_config - INFO - REQUEST - ID: c01af247-58f2-4328-8177-4680e15754a9 | User: None | Method: OPTIONS | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:31:57,042 - logging_config - INFO - RESPONSE - ID: c5222824-1204-437f-a309-a34cf240e262 | Status: 200 | Processing Time: 380ms
+2025-10-23 14:31:57,239 - logging_config - INFO - RESPONSE - ID: c01af247-58f2-4328-8177-4680e15754a9 | Status: 200 | Processing Time: 382ms
+2025-10-23 14:31:57,431 - logging_config - INFO - REQUEST - ID: c30f1320-3d88-4816-82d1-0649d719857d | User: fdwarren@gmail.com | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:31:57,652 - logging_config - INFO - RESPONSE - ID: c30f1320-3d88-4816-82d1-0649d719857d | Status: 200 | Processing Time: 225ms
+2025-10-23 14:31:57,851 - logging_config - INFO - REQUEST - ID: 94e67d1d-e69d-4b06-8dab-42779a0b70b8 | User: fdwarren@gmail.com | Method: GET | Path: /get-models | Query: {} | Body Size: 0 bytes
+2025-10-23 14:31:58,042 - logging_config - INFO - RESPONSE - ID: 94e67d1d-e69d-4b06-8dab-42779a0b70b8 | Status: 200 | Processing Time: 197ms
+2025-10-23 14:32:02,163 - logging_config - INFO - REQUEST - ID: e87d8088-c3ad-49b0-8dd0-d23f9035f330 | User: None | Method: OPTIONS | Path: /generate-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:32:02,357 - logging_config - INFO - RESPONSE - ID: e87d8088-c3ad-49b0-8dd0-d23f9035f330 | Status: 200 | Processing Time: 192ms
+2025-10-23 14:32:02,549 - logging_config - INFO - REQUEST - ID: 6aae080e-1148-4841-9262-f29f029982a0 | User: fdwarren@gmail.com | Method: POST | Path: /generate-sql | Query: {} | Body Size: 31 bytes
+2025-10-23 14:32:02,552 - logging_config - INFO - SQL Generation Request - User: fdwarren@gmail.com | Query: how many wells...
+2025-10-23 14:32:02,994 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-10-23 14:32:05,327 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-10-23 14:32:05,343 - logging_config - INFO - SQL Generation Success - User: fdwarren@gmail.com | Response Type: <class 'dict'>
+2025-10-23 14:32:05,537 - logging_config - INFO - RESPONSE - ID: 6aae080e-1148-4841-9262-f29f029982a0 | Status: 200 | Processing Time: 2984ms
+2025-10-23 14:32:06,775 - logging_config - INFO - REQUEST - ID: d8b715cb-6646-4b9f-9d42-7660f8d512ad | User: None | Method: OPTIONS | Path: /execute-sql | Query: {} | Body Size: 0 bytes
+2025-10-23 14:32:06,970 - logging_config - INFO - RESPONSE - ID: d8b715cb-6646-4b9f-9d42-7660f8d512ad | Status: 200 | Processing Time: 199ms
+2025-10-23 14:32:07,167 - logging_config - INFO - REQUEST - ID: b9cfa515-2d35-4356-b4b9-5ff9b18ce92d | User: fdwarren@gmail.com | Method: POST | Path: /execute-sql | Query: {} | Body Size: 67 bytes
+2025-10-23 14:32:07,169 - logging_config - INFO - SQL Execution Request - User: fdwarren@gmail.com | SQL: SELECT COUNT(*) AS well_count FROM upstream.og_well;...
+2025-10-23 14:32:08,213 - logging_config - INFO - SQL Execution Success - User: fdwarren@gmail.com | Rows: 1
+2025-10-23 14:32:08,405 - logging_config - INFO - RESPONSE - ID: b9cfa515-2d35-4356-b4b9-5ff9b18ce92d | Status: 200 | Processing Time: 1235ms

@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 from urllib.parse import urlencode
 
-from fastapi import HTTPException, Depends, status
+from fastapi import HTTPException, Depends, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from pydantic import BaseModel
@@ -123,6 +123,18 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 
 def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     """Get the current active user."""
+    return current_user
+
+def get_current_user_with_context(request: Request, current_user: User = Depends(get_current_user)) -> User:
+    """Get the current user and set context in request state for logging."""
+    # Set user context in request state for middleware logging
+    request.state.user_email = current_user.email
+    request.state.user_name = current_user.name
+    request.state.user_id = current_user.id
+    
+    # Also set additional user context that might be useful for logging
+    request.state.user_picture = current_user.picture
+    
     return current_user
 
 def create_or_update_user(google_user_data: dict) -> User:

@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from core import RedFiveCore
 from auth import (
     get_current_active_user, 
+    get_current_user_with_context,
     create_access_token, 
     create_refresh_token,
     create_or_update_user,
@@ -22,6 +23,8 @@ from auth import (
     User,
     GoogleTokenRequest
 )
+from middleware import RequestLoggingMiddleware
+from logging_config import logger
 
 load_dotenv()
 
@@ -31,6 +34,7 @@ app = FastAPI(title="RedFive SQL Generator", description="Generate SQL from natu
 cors_origins = os.getenv("CORS_ALLOW_ORIGINS").split(",")
 cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
 
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
@@ -38,6 +42,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add request logging middleware
+app.add_middleware(RequestLoggingMiddleware)
 
 # Initialize the core business logic
 core = RedFiveCore()
@@ -170,21 +177,26 @@ async def logout():
 
 # FastAPI endpoints
 @app.post("/generate-sql", response_model=SqlResponse)
-async def generate_sql_endpoint(request: SqlRequest, current_user: User = Depends(get_current_active_user)):
+async def generate_sql_endpoint(request: SqlRequest, current_user: User = Depends(get_current_user_with_context)):
     """Generate SQL from a natural language query."""
+    logger.info(f"SQL Generation Request - User: {current_user.email} | Query: {request.query[:100]}...")
+    
     try:
         response = core.generate_sql(request.query)
-        print("Response: ", type(response))
+        logger.info(f"SQL Generation Success - User: {current_user.email} | Response Type: {type(response)}")
         return SqlResponse(sql=response["sql"])
     except Exception as e:
-        print("Error generating SQL: ", e)
+        logger.error(f"SQL Generation Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error generating SQL: {str(e)}")
 
 @app.post("/execute-sql", response_model=DataResponse)
-async def execute_sql_endpoint(request: DataRequest, current_user: User = Depends(get_current_active_user)):
+async def execute_sql_endpoint(request: DataRequest, current_user: User = Depends(get_current_user_with_context)):
     """Execute SQL statement against the database and return results."""
+    logger.info(f"SQL Execution Request - User: {current_user.email} | SQL: {request.sql[:100]}...")
+    
     try:
         result = core.execute_sql_query(request.sql)
+        logger.info(f"SQL Execution Success - User: {current_user.email} | Rows: {result['row_count']}")
         return DataResponse(
             response_type="data",
             data=result["data"],
@@ -192,22 +204,30 @@ async def execute_sql_endpoint(request: DataRequest, current_user: User = Depend
             row_count=result["row_count"]
         )
     except ValueError as e:
+        logger.error(f"SQL Execution Validation Error - User: {current_user.email} | Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        logger.error(f"SQL Execution Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error executing SQL: {str(e)}")
 
 @app.post("/clear-cache")
-async def clear_cache_endpoint(current_user: User = Depends(get_current_active_user)):
+async def clear_cache_endpoint(current_user: User = Depends(get_current_user_with_context)):
     """Clear the models cache to force reloading of model files."""
+    logger.info(f"Cache Clear Request - User: {current_user.email}")
+    
     try:
         core.clear_models_cache()
+        logger.info(f"Cache Clear Success - User: {current_user.email}")
         return {"message": "Cache cleared successfully"}
     except Exception as e:
+        logger.error(f"Cache Clear Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error clearing cache: {str(e)}")
 
 @app.get("/validate-models")
-async def validate_models_endpoint(current_user: User = Depends(get_current_active_user)):
+async def validate_models_endpoint(current_user: User = Depends(get_current_user_with_context)):
     """Validate all models against the database by selecting all columns explicitly."""
+    logger.info(f"Model Validation Request - User: {current_user.email}")
+    
     try:
         validation_results = core.validate_models_against_database()
         
@@ -222,6 +242,9 @@ async def validate_models_endpoint(current_user: User = Depends(get_current_acti
         models_with_extra_columns = sum(1 for result in validation_results.values() 
                                       if result.get("status") == "success" and result.get("extra_columns"))
         
+        logger.info(f"Model Validation Success - User: {current_user.email} | "
+                   f"Total: {total_models} | Success: {successful_validations} | Failed: {failed_validations}")
+        
         return {
             "summary": {
                 "total_models": total_models,
@@ -233,6 +256,7 @@ async def validate_models_endpoint(current_user: User = Depends(get_current_acti
             "results": validation_results
         }
     except Exception as e:
+        logger.error(f"Model Validation Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error validating models: {str(e)}")
 
 @app.post("/refresh-embeddings")

@@ -25,10 +25,10 @@ class RedFiveCore:
         Initialize the RedFive core with optional configuration.
         
         Args:
-            connection_string: Database connection string. If None, will use CONNECTION_STRING env var.
+            connection_string: Database connection string. If None, will use READONLY_CONNECTION_STRING env var.
             models_path: Path to models directory. If None, will use ./resources/models.
         """
-        self.connection_string = connection_string or os.getenv("CONNECTION_STRING")
+        self.connection_string = connection_string or os.getenv("READONLY_CONNECTION_STRING")
         # self.models_path = Path(models_path) if models_path else Path(os.path.expanduser("./resources/models"))
         self.models_path = Path(__file__).resolve().parent.parent / "resources" / "models"
         # Global cache for models
@@ -95,7 +95,7 @@ class RedFiveCore:
         models = self.load_models()
         
         if not self.connection_string:
-            raise ValueError("Database connection string not configured")
+            raise ValueError("Read-only database connection string not configured. Please set READONLY_CONNECTION_STRING environment variable.")
         
         validation_results = {}
         
@@ -168,7 +168,7 @@ class RedFiveCore:
         models = self.load_models()
         
         if not self.connection_string:
-            raise ValueError("Database connection string not configured")
+            raise ValueError("Read-only database connection string not configured. Please set READONLY_CONNECTION_STRING environment variable.")
 
         results = retrieve_embeddings(self.connection_string, user_query, 5)
         graph = build_graph(list(models.values()))
@@ -197,7 +197,7 @@ class RedFiveCore:
             Dictionary containing data, columns, and row count
         """
         if not self.connection_string:
-            raise ValueError("Database connection string not configured")
+            raise ValueError("Read-only database connection string not configured. Please set READONLY_CONNECTION_STRING environment variable.")
         
         try:
             engine = create_engine(self.connection_string)
@@ -240,7 +240,7 @@ class RedFiveCore:
         models = self.load_models()
         
         if not self.connection_string:
-            raise ValueError("Database connection string not configured")
+            raise ValueError("Read-only database connection string not configured. Please set READONLY_CONNECTION_STRING environment variable.")
         
         # Create embeddings
         create_embeddings(self.connection_string, models)

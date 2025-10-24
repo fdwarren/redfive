@@ -1,0 +1,52 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "GenericAgChartOptions",
+    "type": "object",
+    "properties": {
+      "chart_type": { "type": "string", "description": "line, bar, area, scatter, pie, etc." },
+      "title": { "type": "string" },
+      "subtitle": { "type": "string" },
+      "data_source": { "type": "string", "description": "optional reference to data view or table" },
+      "x_key": { "type": "string" },
+      "y_keys": { "type": "array", "items": { "type": "string" } },
+      "series": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "xKey": { "type": "string" },
+            "yKey": { "type": "string" },
+            "name": { "type": "string" },
+            "stroke": { "type": "string" },
+            "fill": { "type": "string" },
+            "marker": { "type": "object" }
+          },
+          "required": ["type", "xKey", "yKey"]
+        }
+      },
+      "axes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "position": { "type": "string" },
+            "title": { "type": "object" },
+            "label": { "type": "object" }
+          }
+        }
+      },
+      "legend": { "type": "object" },
+      "theme": {
+        "type": "object",
+        "properties": {
+          "palette": { "type": "string" },
+          "overrides": { "type": "object" }
+        }
+      },
+      "options": { "type": "object" }
+    },
+    "required": ["chart_type", "x_key", "series"]
+  }
+  
