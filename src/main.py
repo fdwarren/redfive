@@ -25,6 +25,8 @@ from auth import (
 )
 from middleware import RequestLoggingMiddleware
 from logging_config import logger
+from queries import SavedQueryManager
+from typing import List, Optional
 
 load_dotenv()
 
@@ -73,6 +75,29 @@ class SqlExaminationResponse(BaseModel):
     sql: str
     explanation: dict
 
+# Saved Query models
+class SavedQueryRequest(BaseModel):
+    guid: str
+    name: str
+    description: Optional[str] = None
+    sqlText: str
+    chartConfig: Optional[dict] = None
+    isPublic: bool = False
+
+class SavedQueryResponse(BaseModel):
+    guid: str
+    name: str
+    description: Optional[str] = None
+    sqlText: str
+    chartConfig: Optional[dict] = None
+    isPublic: bool
+    createdAt: str
+    updatedAt: str
+
+class SavedQueryListResponse(BaseModel):
+    queries: List[SavedQueryResponse]
+    total: int
+
 # Handle OPTIONS requests for CORS preflight
 @app.options("/generate-sql")
 async def options_generate_sql():
@@ -107,6 +132,16 @@ async def options_get_models():
 @app.options("/examine-sql")
 async def options_examine_sql():
     """Handle CORS preflight requests for the examine-sql endpoint."""
+    return {"message": "OK"}
+
+@app.options("/save-query")
+async def options_save_query():
+    """Handle CORS preflight requests for the save-query endpoint."""
+    return {"message": "OK"}
+
+@app.options("/list-queries")
+async def options_list_queries():
+    """Handle CORS preflight requests for the list-queries endpoint."""
     return {"message": "OK"}
 
 # Authentication endpoints
@@ -289,6 +324,74 @@ async def examine_sql_endpoint(request: SqlExaminationRequest, current_user: Use
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error examining SQL: {str(e)}")
+
+# Saved Query endpoints
+@app.post("/save-query", response_model=SavedQueryResponse)
+async def save_query_endpoint(request: SavedQueryRequest, current_user: User = Depends(get_current_user_with_context)):
+    """Save or update a query for the authenticated user."""
+    logger.info(f"Save Query Request - User: {current_user.email} | Query: {request.name}")
+    
+    try:
+        # Convert request to payload dictionary
+        payload = {
+            "guid": request.guid,
+            "name": request.name,
+            "description": request.description,
+            "sqlText": request.sqlText,
+            "chartConfig": request.chartConfig,
+            "isPublic": request.isPublic
+        }
+        
+        logger.info(f"Payload created - Type: {type(payload)}")
+        logger.info(f"ChartConfig type: {type(payload.get('chartConfig'))}")
+        logger.info(f"ChartConfig value: {payload.get('chartConfig')}")
+        
+        query_manager = SavedQueryManager()
+        result = query_manager.save_query(
+            user_id=current_user.id,
+            payload=payload
+        )
+        
+        logger.info(f"Save Query Success - User: {current_user.email} | GUID: {request.guid}")
+        logger.info(f"Result type: {type(result)}")
+        logger.info(f"Result content: {result}")
+        
+        # Try to create the response object
+        try:
+            response = SavedQueryResponse(**result)
+            logger.info(f"Response object created successfully")
+            return response
+        except Exception as response_error:
+            logger.error(f"Error creating SavedQueryResponse: {str(response_error)}")
+            logger.error(f"Result keys: {list(result.keys()) if isinstance(result, dict) else 'Not a dict'}")
+            raise response_error
+        
+    except Exception as e:
+        logger.error(f"Save Query Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error saving query: {str(e)}")
+
+@app.get("/list-queries", response_model=SavedQueryListResponse)
+async def list_queries_endpoint(current_user: User = Depends(get_current_user_with_context)):
+    """Get all saved queries for the authenticated user."""
+    logger.info(f"List Queries Request - User: {current_user.email}")
+    
+    try:
+        query_manager = SavedQueryManager()
+        queries_data = query_manager.list_queries(current_user.id)
+        
+        # Convert to response format
+        queries = [SavedQueryResponse(**query) for query in queries_data]
+        
+        logger.info(f"List Queries Success - User: {current_user.email} | Count: {len(queries)}")
+        
+        return SavedQueryListResponse(
+            queries=queries,
+            total=len(queries)
+        )
+        
+    except Exception as e:
+        logger.error(f"List Queries Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error listing queries: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
