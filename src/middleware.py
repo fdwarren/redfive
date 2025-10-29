@@ -220,7 +220,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             "/examine-sql": "sql_examination",
             "/validate-models": "model_validation",
             "/refresh-embeddings": "embedding_refresh",
-            "/get-models": "model_retrieval",
+            "/list-models": "model_retrieval",
             "/clear-cache": "cache_management",
             "/auth/google": "authentication",
             "/auth/me": "user_info",

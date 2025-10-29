@@ -124,9 +124,9 @@ async def options_refresh_embeddings():
     """Handle CORS preflight requests for the refresh-embeddings endpoint."""
     return {"message": "OK"}
 
-@app.options("/get-models")
-async def options_get_models():
-    """Handle CORS preflight requests for the get-models endpoint."""
+@app.options("/list-models")
+async def options_list_models():
+    """Handle CORS preflight requests for the list-models endpoint."""
     return {"message": "OK"}
 
 @app.options("/examine-sql")
@@ -142,6 +142,11 @@ async def options_save_query():
 @app.options("/list-queries")
 async def options_list_queries():
     """Handle CORS preflight requests for the list-queries endpoint."""
+    return {"message": "OK"}
+
+@app.options("/delete-query/{guid}")
+async def options_delete_query(guid: str):
+    """Handle CORS preflight requests for the delete-query endpoint."""
     return {"message": "OK"}
 
 # Authentication endpoints
@@ -303,11 +308,11 @@ async def refresh_embeddings_endpoint(current_user: User = Depends(get_current_a
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error refreshing embeddings: {str(e)}")
 
-@app.get("/get-models")
-async def get_models_endpoint(current_user: User = Depends(get_current_active_user)):
+@app.get("/list-models")
+async def list_models_endpoint(current_user: User = Depends(get_current_active_user)):
     """Get all models in JSON format."""
     try:
-        result = core.get_models()
+        result = core.list_models()
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading models: {str(e)}")
@@ -392,6 +397,29 @@ async def list_queries_endpoint(current_user: User = Depends(get_current_user_wi
     except Exception as e:
         logger.error(f"List Queries Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error listing queries: {str(e)}")
+
+@app.delete("/delete-query/{guid}")
+async def delete_query_endpoint(guid: str, current_user: User = Depends(get_current_user_with_context)):
+    """Delete a saved query by GUID for the authenticated user."""
+    logger.info(f"Delete Query Request - User: {current_user.email} | GUID: {guid}")
+    
+    try:
+        query_manager = SavedQueryManager()
+        deleted = query_manager.delete_query(current_user.id, guid)
+        
+        if deleted:
+            logger.info(f"Delete Query Success - User: {current_user.email} | GUID: {guid}")
+            return {"message": "Query deleted successfully", "deleted": True}
+        else:
+            logger.info(f"Delete Query Not Found - User: {current_user.email} | GUID: {guid}")
+            raise HTTPException(status_code=404, detail="Query not found")
+        
+    except HTTPException:
+        # Re-raise HTTPExceptions (like 404) without wrapping
+        raise
+    except Exception as e:
+        logger.error(f"Delete Query Error - User: {current_user.email} | GUID: {guid} | Error: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error deleting query: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

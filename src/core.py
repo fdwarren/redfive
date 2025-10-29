@@ -251,7 +251,7 @@ class RedFiveCore:
             "timestamp": datetime.now().isoformat()
         }
 
-    def get_models(self) -> Dict[str, Any]:
+    def list_models(self) -> Dict[str, Any]:
         """
         Get all models in JSON format.
         Returns the current model definitions as a JSON array with their schemas, columns, and relationships.

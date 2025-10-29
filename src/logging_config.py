@@ -29,9 +29,9 @@ class DatabaseLogger:
     
     def __init__(self, connection_string: Optional[str] = None):
         """Initialize database logger with logging connection string."""
-        self.connection_string = connection_string or os.getenv("LOGGING_CONNECTION_STRING")
+        self.connection_string = connection_string or os.getenv("WRITE_CONNECTION_STRING")
         if not self.connection_string:
-            raise ValueError("Logging connection string not configured. Please set LOGGING_CONNECTION_STRING environment variable.")
+            raise ValueError("Logging connection string not configured. Please set WRITE_CONNECTION_STRING environment variable.")
         
         self.engine = create_engine(self.connection_string)
     

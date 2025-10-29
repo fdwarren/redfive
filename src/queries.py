@@ -19,11 +19,12 @@ class SavedQueryManager:
         Initialize the SavedQueryManager.
         
         Args:
-            connection_string: Database connection string. If None, will use READONLY_CONNECTION_STRING env var.
+            connection_string: Database connection string. If None, will use DATABASE_CONNECTION_STRING env var.
         """
-        self.connection_string = connection_string or os.getenv("READONLY_CONNECTION_STRING")
+        # Try to use a write-enabled connection first, fall back to readonly
+        self.connection_string = os.getenv("WRITE_CONNECTION_STRING")
         if not self.connection_string:
-            raise ValueError("Database connection string not configured. Please set READONLY_CONNECTION_STRING environment variable.")
+            raise ValueError("Database connection string not configured. Please set WRITE_CONNECTION_STRING environment variable.")
         
         self.engine = create_engine(self.connection_string)
     
@@ -217,19 +218,32 @@ class SavedQueryManager:
         """
         try:
             with self.engine.connect() as conn:
-                result = conn.execute(text("""
-                    DELETE FROM saved_queries 
-                    WHERE user_id = :user_id AND guid = :guid
-                """), {"user_id": user_id, "guid": guid})
-                
-                deleted = result.rowcount > 0
-                
-                if deleted:
-                    logger.info(f"Query deleted successfully - User: {user_id} | GUID: {guid}")
-                else:
-                    logger.info(f"Query not found for deletion - User: {user_id} | GUID: {guid}")
-                
-                return deleted
+                # Start a transaction
+                trans = conn.begin()
+                try:
+                    result = conn.execute(text("""
+                        DELETE FROM saved_queries 
+                        WHERE user_id = :user_id AND guid = :guid
+                    """), {"user_id": user_id, "guid": guid})
+                    
+                    deleted = result.rowcount > 0
+                    
+                    if deleted:
+                        logger.info(f"Query deleted successfully - User: {user_id} | GUID: {guid}")
+                    else:
+                        logger.info(f"Query not found for deletion - User: {user_id} | GUID: {guid}")
+                    
+                    # Commit the transaction
+                    trans.commit()
+                    logger.info(f"Delete transaction committed successfully - User: {user_id} | GUID: {guid}")
+                    
+                    return deleted
+                    
+                except Exception as e:
+                    # Rollback the transaction on error
+                    trans.rollback()
+                    logger.error(f"Delete transaction rolled back due to error: {str(e)}")
+                    raise e
                 
         except Exception as e:
             logger.error(f"Error deleting query - User: {user_id} | GUID: {guid} | Error: {str(e)}", exc_info=True)
