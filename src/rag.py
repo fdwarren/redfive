@@ -1,9 +1,31 @@
+import logging
+from typing import List
+from pydantic import BaseModel
 import sqlparse, json
 import networkx as nx
 from openai import OpenAI
 from sqlalchemy import create_engine, Table, MetaData, text
 from sqlalchemy.orm import sessionmaker
 from openai import OpenAI
+
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('app.log'),
+        logging.StreamHandler()
+    ]
+)
+
+# Create logger instance
+logger = logging.getLogger(__name__)
+
+
+class HistoryItem(BaseModel):
+    user_prompt: str
+    system_response: str
 
 def create_embeddings(db_connection_string: str, models: dict):
     client = OpenAI()
@@ -107,11 +129,12 @@ def build_llm_context(models, tables):
                 
     return "\n".join(lines)
 
-def generate_sql(context: str, sql_generation_schema: str, user_query: str):
+def generate_sql(context: str, sql_generation_schema: str, user_query: str, history: List[HistoryItem]):
     prompt = f"""
         You are an expert SQL generation assistant. You will receive:
         1. A user request in natural language.
         2. Context retrieved from a semantic model (tables, columns, relationships).
+        3. The history of the conversation.
 
         Your task:
         - Generate a **valid SQL query** for the request.
@@ -124,6 +147,9 @@ def generate_sql(context: str, sql_generation_schema: str, user_query: str):
         Respond **only** in JSON with this schema:
 
         {sql_generation_schema}
+
+        Here is the history of the conversation:
+        {"\n".join([f"User: {item.user_prompt}\nSystem: {item.system_response}" for item in history])}
 
         Generate a single SQL query answering:
         '{user_query}'
@@ -139,6 +165,8 @@ def generate_sql(context: str, sql_generation_schema: str, user_query: str):
         - Only use the columns and tables provided in the schema.
         - Return only the SQL query, no other text.
         """
+
+    logger.info(f"Prompt: {prompt}")
 
     client = OpenAI()
 

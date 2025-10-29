@@ -51,11 +51,15 @@ app.add_middleware(RequestLoggingMiddleware)
 # Initialize the core business logic
 core = RedFiveCore()
 
-# Pydantic models for request/response
-class SqlRequest(BaseModel):
-    query: str
+class HistoryItem(BaseModel):
+    user_prompt: str
+    system_response: str
 
-class SqlResponse(BaseModel):
+class SqlGenerationRequest(BaseModel):
+    query: str
+    history: Optional[List[HistoryItem]] = None
+
+class SqlGenerationResponse(BaseModel):
     sql: str
 
 class DataRequest(BaseModel):
@@ -97,6 +101,7 @@ class SavedQueryResponse(BaseModel):
 class SavedQueryListResponse(BaseModel):
     queries: List[SavedQueryResponse]
     total: int
+
 
 # Handle OPTIONS requests for CORS preflight
 @app.options("/generate-sql")
@@ -216,15 +221,15 @@ async def logout():
     return {"message": "Logged out successfully"}
 
 # FastAPI endpoints
-@app.post("/generate-sql", response_model=SqlResponse)
-async def generate_sql_endpoint(request: SqlRequest, current_user: User = Depends(get_current_user_with_context)):
+@app.post("/generate-sql", response_model=SqlGenerationResponse)
+async def generate_sql_endpoint(request: SqlGenerationRequest, current_user: User = Depends(get_current_user_with_context)):
     """Generate SQL from a natural language query."""
     logger.info(f"SQL Generation Request - User: {current_user.email} | Query: {request.query[:100]}...")
-    
+    logger.info(f"Request: {request}")
     try:
-        response = core.generate_sql(request.query)
+        response = core.generate_sql(request.query, request.history)
         logger.info(f"SQL Generation Success - User: {current_user.email} | Response Type: {type(response)}")
-        return SqlResponse(sql=response["sql"])
+        return SqlGenerationResponse(sql=response["sql"])
     except Exception as e:
         logger.error(f"SQL Generation Error - User: {current_user.email} | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error generating SQL: {str(e)}")

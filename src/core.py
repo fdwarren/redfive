@@ -4,14 +4,35 @@ This module contains all the reusable functionality that can be used by both API
 """
 
 import json
+import logging
 import os
 import traceback
+from pydantic import BaseModel
 import yaml
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from sqlalchemy import create_engine, text
 from rag import create_embeddings, retrieve_embeddings, build_graph, expand_with_graph, build_llm_context, generate_sql
+
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('app.log'),
+        logging.StreamHandler()
+    ]
+)
+
+# Create logger instance
+logger = logging.getLogger(__name__)
+
+
+class HistoryItem(BaseModel):
+    user_prompt: str
+    system_response: str
 
 
 class RedFiveCore:
@@ -155,7 +176,7 @@ class RedFiveCore:
         
         return validation_results
 
-    def generate_sql(self, user_query: str) -> Dict[str, Any]:
+    def generate_sql(self, user_query: str, history: Optional[List[HistoryItem]] = None) -> Dict[str, Any]:
         """
         Generate SQL from a natural language query.
         
@@ -170,7 +191,13 @@ class RedFiveCore:
         if not self.connection_string:
             raise ValueError("Read-only database connection string not configured. Please set READONLY_CONNECTION_STRING environment variable.")
 
-        results = retrieve_embeddings(self.connection_string, user_query, 5)
+        logger.info(f"History==============: {history}")
+
+        if history is None:
+            history = []
+
+        history_str = "\n".join([f"{item.user_prompt}\n" for item in history])
+        results = retrieve_embeddings(self.connection_string, f"{user_query}\n\n{history_str}", 7)
         graph = build_graph(list(models.values()))
         table_names = expand_with_graph(graph, results)
         context = build_llm_context(models, table_names)
@@ -179,9 +206,8 @@ class RedFiveCore:
         with open(sql_generation_schema_path, "r") as f:
             sql_generation_schema = f.read()
 
-        response = generate_sql(context, sql_generation_schema, user_query)
-
-        print("Response: ", response)
+        response = generate_sql(context, sql_generation_schema, user_query, history)
+        logger.info(f"Response: {response}")
         return json.loads(response)
 
 
